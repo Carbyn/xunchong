@@ -1,0 +1,120 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "1a7fa07ad0f3541d985ac58671facc01",
+    "content-hash": "8b29017518408a7cf84e7988f404cffb",
+    "packages": [
+        {
+            "name": "curl/curl",
+            "version": "1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-mod/curl.git",
+                "reference": "16e8489b048ef57ffbf74591a201f7808155b2db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/php-mod/curl/16e8489b048ef57ffbf74591a201f7808155b2db.zip",
+                "reference": "16e8489b048ef57ffbf74591a201f7808155b2db",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*",
+                "squizlabs/php_codesniffer": "~2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Curl": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hassan Amouhzi",
+                    "email": "hassan@anezi.net",
+                    "homepage": "http://hassan.amouhzi.com"
+                },
+                {
+                    "name": "php-curl-class",
+                    "homepage": "https://github.com/php-curl-class"
+                },
+                {
+                    "name": "user52",
+                    "homepage": "https://github.com/user52"
+                }
+            ],
+            "description": "cURL class for PHP",
+            "homepage": "https://github.com/php-mod/curl",
+            "keywords": [
+                "curl",
+                "dot"
+            ],
+            "time": "2017-08-12 11:44:08"
+        },
+        {
+            "name": "izniburak/pdox",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/izniburak/pdox.git",
+                "reference": "631d74bc5009f2590bae348fa3934f6f720e3ecf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/izniburak/pdox/631d74bc5009f2590bae348fa3934f6f720e3ecf.zip",
+                "reference": "631d74bc5009f2590bae348fa3934f6f720e3ecf",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Buki\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "İzni Burak Demirtaş",
+                    "email": "info@burakdemirtas.org",
+                    "homepage": "http://burakdemirtas.org"
+                }
+            ],
+            "description": "Useful Query Builder, PDO Class for PHP. A simple access to your SQL records.",
+            "homepage": "https://github.com/izniburak/PDOx",
+            "keywords": [
+                "builder",
+                "pdo",
+                "php",
+                "query",
+                "sql"
+            ],
+            "time": "2017-11-28 08:35:29"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
