@@ -3,11 +3,11 @@ class FeedController extends \Explorer\ControllerAbstract {
 
     public function publishAction() {
         if (!$this->userId) {
-            return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, 'ÇëÏÈµÇÂ¼');
+            return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, 'è¯·å…ˆç™»å½•');
         }
         $mobile = $this->getRequest()->getPost('mobile');
         if (!\Explorer\Validation::isMobileValid($mobile)) {
-            return $this->outputError(Constants::ERR_FEED_MOBILE_INVALID, 'ÊÖ»úºÅÎÞÐ§');
+            return $this->outputError(Constants::ERR_FEED_MOBILE_INVALID, 'æ‰‹æœºå·æ— æ•ˆ');
         }
         $type = $this->getRequest()->getPost('type');
         $event_time = $this->getRequest()->getPost('event_time');
@@ -21,16 +21,16 @@ class FeedController extends \Explorer\ControllerAbstract {
 
     public function addImageAction() {
         if (!$this->userId) {
-            return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, 'ÇëÏÈµÇÂ¼');
+            return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, 'è¯·å…ˆç™»å½•');
         }
         $id = $this->getRequest()->getPost('id');
         $articleModel = new ArticleModel();
         $article = $articleModel->fetch($id);
         if (!$article) {
-            return $this->outputError(Constants::ERR_FEED_ARTICLE_NOT_EXISTS, 'ÎÄÕÂ²»´æÔÚ');
+            return $this->outputError(Constants::ERR_FEED_ARTICLE_NOT_EXISTS, 'æ–‡ç« ä¸å­˜åœ¨');
         }
         if ($article->author->id != $this->userId) {
-            return $this->outputError(Constants::ERR_FEED_UNAUTHORIZED, 'Ã»ÓÐÈ¨ÏÞ');
+            return $this->outputError(Constants::ERR_FEED_UNAUTHORIZED, 'æ²¡æœ‰æƒé™');
         }
 
 	    $upload_path = APPLICATION_PATH.'/uploads';
@@ -40,7 +40,7 @@ class FeedController extends \Explorer\ControllerAbstract {
         $name = 'image';
 	    $files = $this->getRequest()->getFiles();
 	    if (empty($files[$name])) {
-            return $this->outputError(Constants::ERR_FEED_NO_IMAGE, 'ÇëÉÏ´«Í¼Æ¬');
+            return $this->outputError(Constants::ERR_FEED_NO_IMAGE, 'è¯·ä¸Šä¼ å›¾ç‰‡');
 	    }
         $file = $files[$name];
         $tmp = explode('.', $file['name']);
@@ -49,7 +49,7 @@ class FeedController extends \Explorer\ControllerAbstract {
         if ($file['error'] == 0 && !empty($file['name'])) {
             move_uploaded_file($file['tmp_name'], $upload_path.'/'.$img_name);
         } else {
-            return $this->outputError(Constants::ERR_FEED_UPLOAD_FAILED, 'ÇëÖØÊÔ');
+            return $this->outputError(Constants::ERR_FEED_UPLOAD_FAILED, 'è¯·é‡è¯•');
         }
         $image = 'https://xunchong.1024.pm/uploads/'.$img_name;
         $articleModel->addImage($id, $image);
@@ -58,7 +58,7 @@ class FeedController extends \Explorer\ControllerAbstract {
 
     public function deleteAction() {
         if (!$this->userId) {
-            return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, 'ÇëÏÈµÇÂ¼');
+            return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, 'è¯·å…ˆç™»å½•');
         }
         $id = $this->getRequest()->getQuery('id');
         $articleModel = new ArticleModel();
@@ -72,7 +72,7 @@ class FeedController extends \Explorer\ControllerAbstract {
         $articleModel = new ArticleModel();
         if ($type == ArticleModel::TYPE_MINE) {
             if (!$this->userId) {
-                return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, 'ÇëÏÈµÇÂ¼');
+                return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, 'è¯·å…ˆç™»å½•');
             }
             $feed = $articleModel->feed($page, 0, $this->userId);
         } else {
@@ -82,4 +82,6 @@ class FeedController extends \Explorer\ControllerAbstract {
     }
 
 }
+
+
 
