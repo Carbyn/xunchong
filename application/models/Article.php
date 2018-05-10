@@ -4,14 +4,28 @@ class ArticleModel extends AbstractModel {
     const TYPE_XUNCHONG = 1;
     const TYPE_XUNZHU   = 2;
     const TYPE_LINGYANG = 3;
+    const TYPE_MINE     = 100;
 
     const TABLE = 'article';
 
-    public function publish($author, $type, $event_time, $content) {
-        $data = compact('author', 'type', 'event_time', 'content');
+    public function publish($author, $mobile, $type, $event_time, $event_address, $reward, $text) {
+        $data = compact('author', 'mobile', 'type', 'event_time', 'event_address', 'reward', 'text');
         $data['pub_time'] = time();
         $id = $this->db->table(self::TABLE)->insert($data);
         return $id;
+    }
+
+    public function addImage($id, $image) {
+        $where = ['id' => $id];
+        $article = $this->db->table(self::TABLE)->where($where)->get();
+        if ($article->images) {
+            $images = $article->images.'|'.$image;
+        } else {
+            $images = $image;
+        }
+        $update = compact('images');
+        $this->db->table(self::TABLE)->where($where)->update($update);
+        return true;
     }
 
     public function delete($id) {
@@ -20,20 +34,25 @@ class ArticleModel extends AbstractModel {
     }
 
     public function fetch($id) {
-        $article = $this->db->table(self::TABLE)->where($where);
+        $where = ['id' => $id];
+        $article = $this->db->table(self::TABLE)->where($where)->get();
         if (empty($article)) {
             return [];
         }
+        $article = $this->images2arr($article);
         $userModel = new UserModel();
         $author = $userModel->fetch($article->author);
         $article->author = $author;
         return $article;
     }
 
-    public function feed($page = 1, $type = 0) {
+    public function feed($page = 1, $type = 0, $author = 0) {
         $where = [];
         if ($this->isTypeValid($type)) {
-            $where = ['type' => $type];
+            $where['type'] = $type;
+        }
+        if ($author) {
+            $where['author'] = $author;
         }
         $page = max(1, $page);
         $limit = ($page - 1) * 10;
@@ -58,10 +77,20 @@ class ArticleModel extends AbstractModel {
         foreach($feed as $article) {
             if (isset($authors[$article->author])) {
                 $article->author = $authors[$article->author];
+                $article = $this->images2arr($article);
                 $ret[] = $article;
             }
         }
         return $ret;
+    }
+
+    private function images2arr($article) {
+        if ($article->images) {
+            $article->images = explode('|', $article->images);
+        } else {
+            $article->images = [];
+        }
+        return $article;
     }
 
     public function isTypeValid($type) {

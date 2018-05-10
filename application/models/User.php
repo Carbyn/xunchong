@@ -23,20 +23,14 @@ class UserModel extends AbstractModel {
         return $ret;
     }
     
-    public function login($name, $mobile, $avatar) {
-        $data = compact('name', 'mobile', 'avatar');
-        if ($id = $this->exists($mobile)) {
-            $where = ['id' => $id];
-            $this->db->table(self::TABLE)->where($where)->update($data);
-        } else {
-            $id = $this->db->table(self::TABLE)->insert($data);
-        }
-        return true;
+    public function create($mobile) {
+        $data = compact('mobile');
+        $data['register_time'] = time();
+        return $this->db->table(self::TABLE)->insert($data);
     }
 
-    public function updateProfile($id, $address) {
+    public function updateProfile($id, $data) {
         $where = ['id' => $id];
-        $data = compact('address');
         $this->db->table(self::TABLE)->where($where)->update($data);
     }
 
