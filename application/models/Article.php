@@ -46,7 +46,7 @@ class ArticleModel extends AbstractModel {
         return $article;
     }
 
-    public function feed($page = 1, $type = 0, $author = 0) {
+    public function feed($page = 1, $pagesize = 10, $type = 0, $author = 0) {
         $where = [];
         if ($this->isTypeValid($type)) {
             $where['type'] = $type;
@@ -55,15 +55,18 @@ class ArticleModel extends AbstractModel {
             $where['author'] = $author;
         }
         $page = max(1, $page);
-        $limit = ($page - 1) * 10;
-        $offset = 10;
+        $pagesize = max(10, min(15, $page));
+        $limit = ($page - 1) * $pagesize;
         $feed = $this->db->table(self::TABLE);
         if (!empty($where)) {
             $feed = $feed->where($where);
         }
         $feed = $feed->orderBy('pub_time', 'desc')
-            ->limit($limit, $offset)
+            ->limit($limit, $pagesize)
             ->getAll();
+        if (empty($feed)) {
+            return [];
+        }
 
         $authors = [];
         foreach($feed as $article) {

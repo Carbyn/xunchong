@@ -15,6 +15,10 @@ class Constants {
     const ERR_FEED_UNAUTHORIZED    = 1203;
     const ERR_FEED_NO_IMAGE        = 1204;
     const ERR_FEED_UPLOAD_FAILED   = 1205;
+    const ERR_FEED_TEXT_INVALID    = 1206;
+    const ERR_FEED_EVENTTIME_INVALID = 1207;
+    const ERR_FEED_EVENTADDRESS_INVALID = 1208;
+    const ERR_FEED_TYPE_INVALID    = 1209;
 
 }
 

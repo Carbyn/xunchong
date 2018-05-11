@@ -29,9 +29,10 @@ class LoginController extends \Explorer\ControllerAbstract {
         if (!$id) {
             $id = $userModel->create($mobile);
         }
+        $user = $userModel->fetch($id);
         $token = \Explorer\Utils::generateToken(32);
         $loginModel->saveToken($id, $token);
-        $this->outputSuccess(compact('token'));
+        $this->outputSuccess(compact('token', 'user'));
     }
 
     public function verifyTokenAction() {
