@@ -7,6 +7,7 @@ class Constants {
     const ERR_LOGIN_SEND_FAILED    = 1002;
     const ERR_LOGIN_WRONG_CODE     = 1003;
     const ERR_LOGIN_WRONG_TOKEN    = 1004;
+    const ERR_LOGIN_CODE_INVALID   = 1005;
 
     const ERR_USER_DATA_EMPTY      = 1101;
 

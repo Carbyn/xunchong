@@ -1,6 +1,7 @@
 <?php
 class LoginController extends \Explorer\ControllerAbstract {
 
+    /*
     public function sendCodeAction() {
         $mobile = $this->getRequest()->getQuery('mobile');
         if (!\Explorer\Validation::isMobileValid($mobile)) {
@@ -25,12 +26,34 @@ class LoginController extends \Explorer\ControllerAbstract {
             return $this->outputError(Constants::ERR_LOGIN_WRONG_CODE, '验证码错误');
         }
         $userModel = new UserModel();
-        $id = $userModel->exists($mobile);
-        if (!$id) {
+        $user = $userModel->exists($mobile);
+        if (!$user) {
             $id = $userModel->create($mobile);
+            $user = $userModel->fetch($id);
         }
-        $user = $userModel->fetch($id);
         $token = \Explorer\Utils::generateToken(32);
+        $loginModel->saveToken($id, $token);
+        $this->outputSuccess(compact('token', 'user'));
+    }
+     */
+
+    public function wxloginAction() {
+        $code = $this->getRequest()->getQuery('code');
+        if (empty($code)) {
+            return $this->outputError(Constants::ERR_LOGIN_CODE_INVALID, 'code无效');
+        }
+        $openid = \Explorer\Weixin::jscode2session($code);
+        if (!$openid) {
+            return $this->outputError(Constants::ERR_LOGIN_CODE_INVALID, 'code无效');
+        }
+        $userModel = new UserModel();
+        $user = $userModel->existsOpenid($openid);
+        if (!$user) {
+            $id = $userModel->createOpenid($openid);
+            $user = $userModel->fetch($id);
+        }
+        $token = \Explorer\Utils::generateToken(32);
+        $loginModel = new LoginModel();
         $loginModel->saveToken($id, $token);
         $this->outputSuccess(compact('token', 'user'));
     }
