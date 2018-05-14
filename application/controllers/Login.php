@@ -54,7 +54,7 @@ class LoginController extends \Explorer\ControllerAbstract {
         }
         $token = \Explorer\Utils::generateToken(32);
         $loginModel = new LoginModel();
-        $loginModel->saveToken($id, $token);
+        $loginModel->saveToken($user->id, $token);
         $this->outputSuccess(compact('token', 'user'));
     }
 
