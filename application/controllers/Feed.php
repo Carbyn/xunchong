@@ -84,7 +84,21 @@ class FeedController extends \Explorer\ControllerAbstract {
         }
         $id = $this->getRequest()->getQuery('id');
         $articleModel = new ArticleModel();
-        $articleModel->delete($id);
+        if ($articleModel->isAuthor($id, $this->userId)) {
+            $articleModel->delete($id);
+        }
+        $this->outputSuccess();
+    }
+
+    public function closeAction() {
+        if (!$this->userId) {
+            return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, '请先登录');
+        }
+        $id = $this->getRequest()->getQuery('id');
+        $articleModel = new ArticleModel();
+        if ($articleModel->isAuthor($id, $this->userId)) {
+            $articleModel->close($id);
+        }
         $this->outputSuccess();
     }
 
@@ -109,6 +123,3 @@ class FeedController extends \Explorer\ControllerAbstract {
     }
 
 }
-
-
-

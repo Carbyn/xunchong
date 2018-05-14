@@ -16,7 +16,7 @@ class ArticleModel extends AbstractModel {
     }
 
     public function addImage($id, $image) {
-        $where = ['id' => $id];
+        $where['id'] = $id;
         $article = $this->db->table(self::TABLE)->where($where)->get();
         if ($article->images) {
             $images = $article->images.'|'.$image;
@@ -28,13 +28,19 @@ class ArticleModel extends AbstractModel {
         return true;
     }
 
+    public function close($id) {
+        $where['id'] = $id;
+        $update['closed'] = 1;
+        $this->db->table(self::TABLE)->where($where)->update($update);
+    }
+
     public function delete($id) {
-        $where = ['id' => $id];
+        $where['id'] = $id;
         $this->db->table(self::TABLE)->delete($where);
     }
 
     public function fetch($id) {
-        $where = ['id' => $id];
+        $where['id'] = $id;
         $article = $this->db->table(self::TABLE)->where($where)->get();
         if (empty($article)) {
             return [];
@@ -44,6 +50,14 @@ class ArticleModel extends AbstractModel {
         $author = $userModel->fetch($article->author);
         $article->author = $author;
         return $article;
+    }
+
+    public function isAuthor($id, $userId) {
+        $article = $this->fetch($id);
+        if ($article && $article->author->id == (int)$userId) {
+            return true;
+        }
+        return false;
     }
 
     public function feed($page = 1, $pagesize = 10, $type = 0, $author = 0) {

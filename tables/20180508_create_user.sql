@@ -7,6 +7,5 @@ create table user (
     `address` varchar(64) not null default '' comment 'user address',
     `register_time` int(11) unsigned not null default 0 comment 'user register time',
     primary key (`id`),
-    unique key uniq_name(`name`),
     unique key uniq_mobile(`mobile`)
 ) Engine=InnoDB default charset=utf8;
