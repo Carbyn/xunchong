@@ -75,6 +75,11 @@ class FeedController extends \Explorer\ControllerAbstract {
         if (!$article) {
             return $this->outputError(Constants::ERR_FEED_ARTICLE_NOT_EXISTS, '文章不存在');
         }
+        if ($this->userId && $this->userId == $article->author->id) {
+            $article->isAuthor = 1;
+        } else {
+            $article->isAuthor = 0;
+        }
         $this->outputSuccess(compact('article'));
     }
 
