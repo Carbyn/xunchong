@@ -89,12 +89,13 @@ class ArticleModel extends AbstractModel {
 
         $userModel = new UserModel();
         $authors = $userModel->fetchAll($authors);
-        
+
         $ret = [];
         foreach($feed as $article) {
             if (isset($authors[$article->author])) {
                 $article->author = $authors[$article->author];
                 $article = $this->images2arr($article);
+                $article->isAuthor = $type == self::TYPE_MINE ? 1 : 0;
                 $ret[] = $article;
             }
         }
