@@ -1,9 +1,9 @@
 <?php
 class ArticleModel extends AbstractModel {
 
+    const TYPE_DEFAULT  = 0;
     const TYPE_XUNCHONG = 1;
-    const TYPE_XUNZHU   = 2;
-    const TYPE_LINGYANG = 3;
+    const TYPE_YOUYUAN  = 2;
     const TYPE_MINE     = 100;
 
     const TABLE = 'article';
@@ -36,10 +36,10 @@ class ArticleModel extends AbstractModel {
 
     public function delete($id) {
         $where['id'] = $id;
-        $this->db->table(self::TABLE)->delete($where);
+        $this->db->table(self::TABLE)->where($where)->delete();
     }
 
-    public function fetch($id) {
+    public function fetch($id, $userId) {
         $where['id'] = $id;
         $article = $this->db->table(self::TABLE)->where($where)->get();
         if (empty($article)) {
@@ -49,6 +49,9 @@ class ArticleModel extends AbstractModel {
         $userModel = new UserModel();
         $author = $userModel->fetch($article->author);
         $article->author = $author;
+        $likeModel = new LikeModel();
+        $article->liked = $likeModel->liked($userId, $id);
+        $article->likeNum = $likeModel->likeNum($id);
         return $article;
     }
 
@@ -60,7 +63,7 @@ class ArticleModel extends AbstractModel {
         return false;
     }
 
-    public function feed($page = 1, $pagesize = 10, $type = 0, $author = 0) {
+    public function feed($page = 1, $pagesize = 10, $type = 0, $author = 0, $userId = 0) {
         $where = [];
         if ($this->isTypeValid($type)) {
             $where['type'] = $type;
@@ -69,7 +72,7 @@ class ArticleModel extends AbstractModel {
             $where['author'] = $author;
         }
         $page = max(1, $page);
-        $pagesize = max(10, min(15, $page));
+        $pagesize = max(10, min(15, $pagesize));
         $limit = ($page - 1) * $pagesize;
         $feed = $this->db->table(self::TABLE);
         if (!empty($where)) {
@@ -83,19 +86,29 @@ class ArticleModel extends AbstractModel {
         }
 
         $authors = [];
+        $article_ids = [];
         foreach($feed as $article) {
             $authors[] = $article->author;
+            $article_ids[] = $article->id;
         }
 
         $userModel = new UserModel();
         $authors = $userModel->fetchAll($authors);
+
+        $likeModel = new LikeModel();
+        $likeNums = $likeModel->multiLikeNum($article_ids);
+        if ($userId) {
+            $liked = $likeModel->multiLiked($userId, $article_ids);
+        }
 
         $ret = [];
         foreach($feed as $article) {
             if (isset($authors[$article->author])) {
                 $article->author = $authors[$article->author];
                 $article = $this->images2arr($article);
-                $article->isAuthor = $type == self::TYPE_MINE ? 1 : 0;
+                $article->isAuthor = $author ? 1 : 0;
+                $article->liked = ($userId && isset($liked[$article->id])) ? 1 : 0;
+                $article->likeNum = isset($likeNums[$article->id]) ? $likeNums[$article->id] : 0;
                 $ret[] = $article;
             }
         }
@@ -113,9 +126,9 @@ class ArticleModel extends AbstractModel {
 
     public function isTypeValid($type) {
         if (in_array($type, [
+            self::TYPE_DEFAULT,
             self::TYPE_XUNCHONG,
-            self::TYPE_XUNZHU,
-            self::TYPE_LINGYANG,
+            self::TYPE_YOUYUAN,
             ])) {
             return true;
         }

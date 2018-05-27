@@ -3,12 +3,17 @@ namespace Explorer;
 class ControllerAbstract extends \Yaf\Controller_Abstract {
 
     public $userId;
+    public $user;
 
     public function init() {
-        $loginModel = new \LoginModel();
         $token = isset($_COOKIE['token']) ? $_COOKIE['token'] : '';
         if ($token) {
+            $loginModel = new \LoginModel();
             $this->userId = $loginModel->verifyToken($token);
+            $userModel = new \UserModel();
+            $this->user = $userModel->fetch($this->userId);
+        } else {
+            $this->userId = 0;
         }
     }
 
