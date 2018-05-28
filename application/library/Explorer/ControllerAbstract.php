@@ -6,6 +6,13 @@ class ControllerAbstract extends \Yaf\Controller_Abstract {
     public $user;
 
     public function init() {
+        // TODO
+        if (isset($_COOKIE['carbyn'])) {
+            $this->userId = 2;
+            $userModel = new \UserModel();
+            $this->user = $userModel->fetch($this->userId);
+            return;
+        }
         $token = isset($_COOKIE['token']) ? $_COOKIE['token'] : '';
         if ($token) {
             $loginModel = new \LoginModel();

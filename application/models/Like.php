@@ -34,18 +34,19 @@ class LikeModel extends AbstractModel {
 
     public function likeNum($article_id) {
         $where = compact('article_id');
-        $count = $this->db->table(self::TABLE)->where($where)->count('id', 'count');
-        return $count->count;
+        $count = $this->db->table(self::TABLE)->where($where)->count('id', 'count')->get();
+        return (int)$count->count;
     }
 
     public function multiLikeNum($article_ids) {
-        $article_ids = implode(',', $article_ids);
-        $sql = 'select article_id, count(id) as count from '
-            .self::TABLE.' where article_id in (?) group by article_id';
-        $data = $this->db->query($sql, [$article_ids]);
+        $data = $this->db->table(self::TABLE)->select('article_id')
+            ->count('id', 'count')
+            ->in('article_id', $article_ids)
+            ->groupBy('article_id')
+            ->getAll();
         $ret = [];
         foreach($data as $row) {
-            $ret[$row->article_id] = $row->count;
+            $ret[$row->article_id] = (int)$row->count;
         }
         return $ret;
     }

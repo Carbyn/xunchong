@@ -34,7 +34,7 @@ class CommentModel extends AbstractModel {
             ->limit($limit, $pagesize)
             ->getAll();
         foreach($comments as &$comment) {
-            $comment['isAuthor'] = $comment['author_id'] == $userId ? 1 : 0;
+            $comment->isAuthor = $comment->author_id == $userId ? 1 : 0;
         }
         return $comments;
     }

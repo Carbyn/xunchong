@@ -1,9 +1,9 @@
 <?php
 class ArticleModel extends AbstractModel {
 
-    const TYPE_DEFAULT  = 0;
-    const TYPE_XUNCHONG = 1;
-    const TYPE_YOUYUAN  = 2;
+    const TYPE_DEFAULT  = 1;
+    const TYPE_XUNCHONG = 2;
+    const TYPE_YOUYUAN  = 3;
     const TYPE_MINE     = 100;
 
     const TABLE = 'article';
@@ -63,14 +63,20 @@ class ArticleModel extends AbstractModel {
         return false;
     }
 
-    public function feed($page = 1, $pagesize = 10, $type = 0, $author = 0, $userId = 0) {
+    public function fetchMine($page, $pagesize, $author) {
+        $where['author'] = $author;
+        return $this->feed($page, $pagesize, $where, $author);
+    }
+
+    public function fetchAll($page, $pagesize, $type, $userId) {
         $where = [];
         if ($this->isTypeValid($type)) {
             $where['type'] = $type;
         }
-        if ($author) {
-            $where['author'] = $author;
-        }
+        return $this->feed($page, $pagesize, $where, $userId);
+    }
+
+    public function feed($page, $pagesize, $where, $userId) {
         $page = max(1, $page);
         $pagesize = max(10, min(15, $pagesize));
         $limit = ($page - 1) * $pagesize;
@@ -106,7 +112,7 @@ class ArticleModel extends AbstractModel {
             if (isset($authors[$article->author])) {
                 $article->author = $authors[$article->author];
                 $article = $this->images2arr($article);
-                $article->isAuthor = $author ? 1 : 0;
+                $article->isAuthor = $article->author->id == $userId ? 1 : 0;
                 $article->liked = ($userId && isset($liked[$article->id])) ? 1 : 0;
                 $article->likeNum = isset($likeNums[$article->id]) ? $likeNums[$article->id] : 0;
                 $ret[] = $article;

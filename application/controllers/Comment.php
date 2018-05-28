@@ -10,7 +10,7 @@ class CommentController extends \Explorer\ControllerAbstract {
         $reply_author_id = $this->getRequest()->getPost('reply_author_id', 0);
         $reply_author_name = $this->getRequest()->getPost('reply_author_name', '');
         $articleModel = new ArticleModel();
-        $article = $articleModel->fetch($article_id);
+        $article = $articleModel->fetch($article_id, $this->userId);
         if (!$article) {
             return $this->outputError(Constants::ERR_COMMENT_ARTICLE_NOT_EXISTS, '文章不存在');
         }
@@ -39,7 +39,7 @@ class CommentController extends \Explorer\ControllerAbstract {
         $commentModel = new CommentModel();
         $comment = $commentModel->fetch($id);
         if ($comment->author_id == $this->userId) {
-            $comment->delete($id);
+            $commentModel->delete($id);
         }
         $this->outputSuccess();
     }
@@ -49,7 +49,7 @@ class CommentController extends \Explorer\ControllerAbstract {
         $page = (int)$this->getRequest()->getQuery('page', 1);
         $pagesize = 10;
         $commentModel = new CommentModel();
-        $comments = $commentModel->more($article_id, $page, $size, $this->userId);
+        $comments = $commentModel->more($article_id, $page, $pagesize, $this->userId);
         $isEnd = 0;
         if (count($comments) < $pagesize) {
             $isEnd = 1;

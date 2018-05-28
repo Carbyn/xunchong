@@ -10,9 +10,9 @@ class FeedController extends \Explorer\ControllerAbstract {
             if (!$this->userId) {
                 return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, '请先登录');
             }
-            $feed = $articleModel->feed($page, $pagesize, 0, $this->userId, $this->userId);
+            $feed = $articleModel->fetchMine($page, $pagesize, $this->userId);
         } else {
-            $feed = $articleModel->feed($page, $pagesize, $type, 0, $this->userId);
+            $feed = $articleModel->fetchAll($page, $pagesize, $type, $this->userId);
         }
         $isEnd = 0;
         if (count($feed) < $pagesize) {
