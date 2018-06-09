@@ -8,9 +8,9 @@ class ArticleModel extends AbstractModel {
 
     const TABLE = 'article';
 
-    public function publish($author, $mobile, $type, $event_time, $event_address, $reward, $text) {
+    public function publish($author, $mobile, $type, $event_time, $event_address, $reward, $text, $pub_time = 0) {
         $data = compact('author', 'mobile', 'type', 'event_time', 'event_address', 'reward', 'text');
-        $data['pub_time'] = time();
+        $data['pub_time'] = $pub_time != 0 ? $pub_time : time();
         $id = $this->db->table(self::TABLE)->insert($data);
         return $id;
     }
