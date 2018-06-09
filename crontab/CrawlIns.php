@@ -7,10 +7,16 @@ class CrawlIns {
 
     const INS_URL_CAT = 'https://www.instagram.com/graphql/query/?query_hash=ded47faa9a1aaded10161a2ff32abb6b&variables=%s';
     const FETCH_IMG_CMD = 'wget -t 5 -T 5 %s -O %s';
+    const PAGES_PER_TIME = 30;
 
     public static function run() {
         $end_cursor = '';
+        $i = 0;
         while (true) {
+            if ($i++ >= self::PAGES_PER_TIME) {
+                echo "get enough nodes\n";
+                break;
+            }
             $vars = self::buildVariables($end_cursor);
             $url = sprintf(self::INS_URL_CAT, $vars);
             echo "fetch: $url\n";
@@ -26,6 +32,10 @@ class CrawlIns {
             }
             foreach($edges as $edge) {
                 if ($edge['node']['is_video']) {
+                    continue;
+                }
+                if (self::exists($edge['node']['id'])) {
+                    echo $edge['node']['id']." exists\n";
                     continue;
                 }
                 self::save($edge['node']);
@@ -73,6 +83,11 @@ class CrawlIns {
         return $resp;
     }
 
+    private static function exists($sid) {
+        $articleModel = new ArticleModel();
+        return $articleModel->sidExists($sid);
+    }
+
     private static function save($node) {
         $articleModel = new ArticleModel();
         $author = self::getAuthor();
@@ -83,6 +98,7 @@ class CrawlIns {
         $reward = 0;
         $text = '';
         $pub_time = $node['taken_at_timestamp'];
+        $sid = $node['id'];
         if (!empty($node['edge_media_to_caption']['edges'][0]['node']['text'])) {
             // TODO
             // $text = $node['edge_media_to_caption']['edges'][0]['node']['text'];
@@ -129,7 +145,7 @@ class CrawlIns {
             return false;
         }
         $image = 'https://xunchong.1024.pm/uploads/'.$img_name;
-        return $img_name;
+        return $image;
     }
 
 }

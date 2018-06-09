@@ -8,8 +8,8 @@ class ArticleModel extends AbstractModel {
 
     const TABLE = 'article';
 
-    public function publish($author, $mobile, $type, $event_time, $event_address, $reward, $text, $pub_time = 0) {
-        $data = compact('author', 'mobile', 'type', 'event_time', 'event_address', 'reward', 'text');
+    public function publish($author, $mobile, $type, $event_time, $event_address, $reward, $text, $pub_time = 0, $sid = '') {
+        $data = compact('author', 'mobile', 'type', 'event_time', 'event_address', 'reward', 'text', 'sid');
         $data['pub_time'] = $pub_time != 0 ? $pub_time : time();
         $id = $this->db->table(self::TABLE)->insert($data);
         return $id;
@@ -53,6 +53,14 @@ class ArticleModel extends AbstractModel {
         $article->liked = $likeModel->liked($userId, $id);
         $article->likeNum = $likeModel->likeNum($id);
         return $article;
+    }
+
+    public function sidExists($sid) {
+        if (!$sid) {
+            return false;
+        }
+        $where['sid'] = $sid;
+        return $this->db->table(self::TABLE)->where($where)->get() ? true : false;
     }
 
     public function isAuthor($id, $userId) {
