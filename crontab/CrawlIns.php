@@ -56,7 +56,7 @@ class CrawlIns {
         }
         $tag_name = '猫チョコピーカンで猫助け';
         $first = 8;
-        return urlencode(compact('tag_name', 'first', 'after'));
+        return urlencode(json_encode(compact('tag_name', 'first', 'after')));
     }
 
     private static function fetchUrl($url) {
