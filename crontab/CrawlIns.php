@@ -1,5 +1,5 @@
 <?php
-include_once('./Base.php');
+include_once(dirname(__FILE__).'/Base.php');
 
 $app->execute(['CrawlIns', 'run']);
 
