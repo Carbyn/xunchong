@@ -8,7 +8,7 @@ class LikeController extends \Explorer\ControllerAbstract {
         $article_id = $this->getRequest()->getQuery('article_id');
         $type = (int)$this->getRequest()->getQuery('like', 1);
         $articleModel = new ArticleModel();
-        if (!$articleModel->fetch($article_id)) {
+        if (!$articleModel->fetch($article_id, $this->userId)) {
             return $this->outputError(Constants::ERR_LIKE_ARTICLE_NOT_EXISTS, '文章不存在');
         }
         $likeModel = new LikeModel();
