@@ -18,7 +18,7 @@ class CrawlIns {
                 break;
             }
             $vars = self::buildVariables($end_cursor);
-            $url = sprintf(self::INS_URL_CAT, $vars);
+            $url = sprintf(self::INS_URL_CAT, urlencode($vars));
             echo "fetch: $url\n";
             $resp = self::fetchUrl($url);
             if (!$resp) {
@@ -56,11 +56,12 @@ class CrawlIns {
         }
         $tag_name = '猫チョコピーカンで猫助け';
         $first = 8;
-        return urlencode(json_encode(compact('tag_name', 'first', 'after')));
+        return json_encode(compact('tag_name', 'first', 'after'));
     }
 
     private static function fetchUrl($url) {
         $curl = new \Curl\Curl();
+        $curl->setCookie('sessionid', 'IGSC59769ee130c2fceb8f760b541ef8af15f07403424b175f8247292595187a935d%3ASnvpLqgmLziNb0UcxGk0RXaj9rt94bMM%3A%7B%22_auth_user_id%22%3A1549046332%2C%22_auth_user_backend%22%3A%22accounts.backends.CaseInsensitiveModelBackend%22%2C%22_auth_user_hash%22%3A%22%22%2C%22_platform%22%3A4%2C%22_token_ver%22%3A2%2C%22_token%22%3A%221549046332%3AtelyDvOCzYqV2FU9CccyDj9oueOM58ZA%3Ad7c5d41d7222dd717bd6fdf4c0fe295cc20ff0fda430f9ed2ad9d97004075690%22%2C%22last_refreshed%22%3A1528538296.8594250679%7D');
 
         $resp = '';
         $retry = 3;
