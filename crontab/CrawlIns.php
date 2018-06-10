@@ -48,7 +48,7 @@ class CrawlIns {
                 }
                 self::save($edge['node']);
             }
-            $pagInfo = $resp['data']['hashtag']['edge_hashtag_to_media']['page_info'];
+            $pageInfo = $resp['data']['hashtag']['edge_hashtag_to_media']['page_info'];
             if (!$pageInfo['has_next_page']) {
                 echo "has_next_page false\n";
                 break;
