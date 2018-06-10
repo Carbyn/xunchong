@@ -53,7 +53,7 @@ class CrawlIns {
 
     private static function buildVariables($after = '') {
         if ($after == '') {
-            $after = 'AQCQJVWnWWqYKyRMFaWY7ZGCn5IkzhAEO-f_RlETUUMVG-YkNVBSXfDQy1qXjCJ5cUaAh2lDhe1k3fNMfjE6RWiFdMwcl_EN-okniM6VKoQbyA';
+            // $after = 'AQCQJVWnWWqYKyRMFaWY7ZGCn5IkzhAEO-f_RlETUUMVG-YkNVBSXfDQy1qXjCJ5cUaAh2lDhe1k3fNMfjE6RWiFdMwcl_EN-okniM6VKoQbyA';
         }
         $tag_name = '猫チョコピーカンで猫助け';
         $first = 8;
