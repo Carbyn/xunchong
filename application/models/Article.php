@@ -11,6 +11,7 @@ class ArticleModel extends AbstractModel {
     public function publish($author, $mobile, $type, $event_time, $event_address, $reward, $text, $pub_time = 0, $sid = '') {
         $data = compact('author', 'mobile', 'type', 'event_time', 'event_address', 'reward', 'text', 'sid');
         $data['pub_time'] = $pub_time != 0 ? $pub_time : time();
+        $data['approved'] = 0;
         $id = $this->db->table(self::TABLE)->insert($data);
         return $id;
     }
@@ -25,7 +26,14 @@ class ArticleModel extends AbstractModel {
         }
         $update = compact('images');
         $this->db->table(self::TABLE)->where($where)->update($update);
+        $this->approve($id);
         return true;
+    }
+
+    public function approve($id) {
+        $where['id'] = $id;
+        $update['approved'] = 1;
+        $this->db->table(self::TABLE)->where($where)->update($update);
     }
 
     public function close($id) {
@@ -88,11 +96,9 @@ class ArticleModel extends AbstractModel {
         $page = max(1, $page);
         $pagesize = max(10, min(15, $pagesize));
         $limit = ($page - 1) * $pagesize;
-        $feed = $this->db->table(self::TABLE);
-        if (!empty($where)) {
-            $feed = $feed->where($where);
-        }
-        $feed = $feed->orderBy('pub_time', 'desc')
+        $where['approved'] = 1;
+        $feed = $this->db->table(self::TABLE)->where($where)
+            ->orderBy('pub_time', 'desc')
             ->limit($limit, $pagesize)
             ->getAll();
         if (empty($feed)) {

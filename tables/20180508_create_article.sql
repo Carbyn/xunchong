@@ -1,16 +1,19 @@
-create table article (
-    `id` bigint(20) unsigned auto_increment comment 'primary key',
-    `author` bigint(20) unsigned not null default 0 comment 'author id',
-    `mobile` char(11) not null default '' comment 'article mobile',
-    `type` tinyint(3) unsigned not null default 0 comment 'article type',
-    `event_time` varchar(32) not null default '' comment 'event time',
-    `event_address` varchar(256) not null default '' comment 'event address',
-    `reward` int(11) unsigned not null default 0 comment 'article reward',
-    `text` varchar(4096) not null default '' comment 'article text',
-    `images` varchar(4096) not null default '' comment 'article image urls',
-    `pub_time` int(11) unsigned not null default 0 comment 'article publish time',
-    `closed` tinyint(3) unsigned not null default 0 comment 'closed 0/1',
-    primary key (`id`),
-    key `type_pub_time` (`type`, `pub_time`),
-    key `pub_time` (`pub_time`)
-) Engine=InnoDB default charset=utf8;
+CREATE TABLE `article` (
+      `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'primary key',
+      `author` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'author id',
+      `mobile` char(11) NOT NULL DEFAULT '' COMMENT 'article mobile',
+      `type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'article type',
+      `event_time` varchar(32) NOT NULL DEFAULT '' COMMENT 'event time',
+      `event_address` varchar(256) NOT NULL DEFAULT '' COMMENT 'event address',
+      `reward` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'article reward',
+      `text` varchar(4096) NOT NULL DEFAULT '' COMMENT 'article text',
+      `images` varchar(4096) NOT NULL DEFAULT '' COMMENT 'article image urls',
+      `pub_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'article publish time',
+      `closed` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'closed 0/1',
+      `sid` varchar(64) NOT NULL DEFAULT '' COMMENT 'source id',
+      `approved` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'approved 0: no, 1: yes',
+      PRIMARY KEY (`id`),
+      KEY `sid` (`sid`),
+      KEY `type_approved_pubtime` (`type`,`approved`,`pub_time`),
+      KEY `approved_pubtime` (`approved`,`pub_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
