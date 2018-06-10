@@ -172,7 +172,7 @@ class CrawlIns {
         }
 		$remote_path = str_replace('ubuntu', 'explorer', $img_path);
 		$cmd = "rsync $img_path explorer@dev.1024.pm:$remote_path";
-		echo $cmd;
+		echo $cmd."\n";
 		@exec($cmd);
         $image = 'https://xunchong.1024.pm/uploads/'.$img_name;
         return $image;
