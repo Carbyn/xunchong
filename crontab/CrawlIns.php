@@ -7,9 +7,16 @@ class CrawlIns {
 
     const INS_URL_CAT = 'https://www.instagram.com/graphql/query/?query_hash=ded47faa9a1aaded10161a2ff32abb6b&variables=%s';
     const FETCH_IMG_CMD = 'wget -t 5 -T 5 %s -O %s';
-    const PAGES_PER_TIME = 30;
+    const PAGES_PER_TIME = 10;
+
+    private static $tmp;
 
     public static function run() {
+        self::$tmp = dirname(__FILE__).'/tmp';
+        if (!@file_exists(self::$tmp)) {
+            @exec("mkdir -p ".self::$tmp);
+        }
+        exec('rm -rf '.self::$tmp.'/*');
         $end_cursor = '';
         $i = 0;
         while (true) {
@@ -19,7 +26,7 @@ class CrawlIns {
             }
             $vars = self::buildVariables($end_cursor);
             $url = sprintf(self::INS_URL_CAT, urlencode($vars));
-            echo "fetch: $url\n";
+            // echo "fetch: $url\n";
             // $resp = self::fetchUrl($url);
             $resp = self::curlUrl($url);
             if (!$resp) {
@@ -61,17 +68,16 @@ class CrawlIns {
     }
 
     private static function curlUrl($url) {
-        $cmd = "curl -s '$url' -H 'cookie: sessionid=IGSC59769ee130c2fceb8f760b541ef8af15f07403424b175f8247292595187a935d%3ASnvpLqgmLziNb0UcxGk0RXaj9rt94bMM%3A%7B%22_auth_user_id%22%3A1549046332%2C%22_auth_user_backend%22%3A%22accounts.backends.CaseInsensitiveModelBackend%22%2C%22_auth_user_hash%22%3A%22%22%2C%22_platform%22%3A4%2C%22_token_ver%22%3A2%2C%22_token%22%3A%221549046332%3AtelyDvOCzYqV2FU9CccyDj9oueOM58ZA%3Ad7c5d41d7222dd717bd6fdf4c0fe295cc20ff0fda430f9ed2ad9d97004075690%22%2C%22last_refreshed%22%3A1528538296.8594250679%7D'";
+		$out = self::$tmp.'/'.md5($url);
+        $cmd = "curl -s '$url' -H 'user-agent: Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1' -H 'cookie: sessionid=IGSC59769ee130c2fceb8f760b541ef8af15f07403424b175f8247292595187a935d%3ASnvpLqgmLziNb0UcxGk0RXaj9rt94bMM%3A%7B%22_auth_user_id%22%3A1549046332%2C%22_auth_user_backend%22%3A%22accounts.backends.CaseInsensitiveModelBackend%22%2C%22_auth_user_hash%22%3A%22%22%2C%22_platform%22%3A4%2C%22_token_ver%22%3A2%2C%22_token%22%3A%221549046332%3AtelyDvOCzYqV2FU9CccyDj9oueOM58ZA%3Ad7c5d41d7222dd717bd6fdf4c0fe295cc20ff0fda430f9ed2ad9d97004075690%22%2C%22last_refreshed%22%3A1528538296.8594250679%7D' > $out";
         echo $cmd."\n";
-        exec($cmd, $resp, $status);
-        if ($status != 0) {
-            return false;
-        }
+        exec($cmd);
+		$resp = @file_get_contents($out);
         if (!$resp) {
             return false;
         }
         $resp = @json_decode($resp, true);
-        if ($resp['status'] != 'ok') {
+        if (!$resp || $resp['status'] != 'ok') {
             return false;
         }
         return $resp;
@@ -122,7 +128,7 @@ class CrawlIns {
             // TODO
             // $text = $node['edge_media_to_caption']['edges'][0]['node']['text'];
         }
-        $id = $articleModel->publish($author, $mobile, $type, $event_time, $event_address, $reward, $text, $pub_time);
+        $id = $articleModel->publish($author, $mobile, $type, $event_time, $event_address, $reward, $text, $pub_time, $sid);
         if (!$id) {
             echo "save node failed\n";
             return false;
@@ -135,6 +141,7 @@ class CrawlIns {
         }
         if (!$articleModel->addImage($id, $image)) {
             echo "save addImage failed\n";
+            $articleModel->delete($id);
             return false;
         }
         return true;
@@ -163,6 +170,10 @@ class CrawlIns {
             echo "fetchImg failed\n";
             return false;
         }
+		$remote_path = str_replace('ubuntu', 'explorer', $img_path);
+		$cmd = "rsync $img_path explorer@dev.1024.pm:$remote_path";
+		echo $cmd;
+		@exec($cmd);
         $image = 'https://xunchong.1024.pm/uploads/'.$img_name;
         return $image;
     }
