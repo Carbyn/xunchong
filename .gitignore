@@ -3,3 +3,4 @@ uploads
 static
 *.swo
 *.swp
+.env

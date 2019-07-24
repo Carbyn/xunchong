@@ -37,5 +37,19 @@ class Constants {
 
     const ERR_LIKE_ARTICLE_NOT_EXISTS = 1501;
 
-}
+    private static $env;
+    public static function env() {
+        if (!self::$env) {
+            self::$env = 'dev';
+            $envPath = APPLICATION_PATH.'/.env';
+            if (@file_exists($envPath)) {
+                $envConfig = new \Yaf\Config\Ini($envPath);
+                if ($envConfig->env == 'production') {
+                    self::$env = $envConfig->env;
+                }
+            }
+        }
+        return self::$env;
+    }
 
+}
