@@ -5,17 +5,18 @@ class LikeController extends \Explorer\ControllerAbstract {
         if (!$this->userId) {
             return $this->outputError(Constants::ERR_SYS_NOT_LOGGED, '请先登录');
         }
-        $article_id = $this->getRequest()->getQuery('article_id');
+        $goods_id = $this->getRequest()->getQuery('goods_id');
         $type = (int)$this->getRequest()->getQuery('like', 1);
-        $articleModel = new ArticleModel();
-        if (!$articleModel->fetch($article_id, $this->userId)) {
-            return $this->outputError(Constants::ERR_LIKE_ARTICLE_NOT_EXISTS, '文章不存在');
-        }
+        // TODO
+        // whether goods exists
         $likeModel = new LikeModel();
         if ($type == 1) {
-            $likeModel->like($this->userId, $article_id);
+            if ($likeModel->liked($this->userId, $goods_id)) {
+                return $this->outputSuccess();
+            }
+            $likeModel->like($this->userId, $goods_id);
         } else {
-            $likeModel->dislike($this->userId, $article_id);
+            $likeModel->dislike($this->userId, $goods_id);
         }
         $this->outputSuccess();
     }

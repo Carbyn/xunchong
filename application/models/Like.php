@@ -3,50 +3,50 @@ class LikeModel extends AbstractModel {
 
     const TABLE = '`like`';
 
-    public function like($author_id, $article_id) {
-        $data = compact('author_id', 'article_id');
-        $data['pub_time'] = time();
+    public function like($user_id, $goods_id) {
+        $create_time = time();
+        $data = compact('user_id', 'goods_id', 'create_time');
         $id = $this->db->table(self::TABLE)->insert($data);
         return $id;
     }
 
-    public function dislike($author_id, $article_id) {
-        $where = compact('author_id', 'article_id');
-        $this->db->table(self::TABLE)->where($where)->delete();
+    public function dislike($user_id, $goods_id) {
+        $where = compact('user_id', 'goods_id');
+        return $this->db->table(self::TABLE)->where($where)->delete();
     }
 
-    public function liked($author_id, $article_id) {
-        $where = compact('author_id', 'article_id');
+    public function liked($user_id, $goods_id) {
+        $where = compact('user_id', 'goods_id');
         $row = $this->db->table(self::TABLE)->where($where)->get();
         return $row ? 1 : 0;
     }
 
-    public function multiLiked($author_id, $article_ids) {
-        $where = compact('author_id');
+    public function multiLiked($user_id, $goods_ids) {
+        $where = compact('user_id');
         $data = $this->db->table(self::TABLE)->where($where)
-            ->in('article_id', $article_ids)->getAll();
+            ->in('goods_id', $goods_ids)->getAll();
         $ret = [];
         foreach($data as $row) {
-            $ret[$row->article_id] = 1;
+            $ret[$row->goods_id] = 1;
         }
         return $ret;
     }
 
-    public function likeNum($article_id) {
-        $where = compact('article_id');
+    public function likeNum($goods_id) {
+        $where = compact('goods_id');
         $count = $this->db->table(self::TABLE)->where($where)->count('id', 'count')->get();
         return (int)$count->count;
     }
 
-    public function multiLikeNum($article_ids) {
-        $data = $this->db->table(self::TABLE)->select('article_id')
+    public function multiLikeNum($goods_ids) {
+        $data = $this->db->table(self::TABLE)->select('goods_id')
             ->count('id', 'count')
-            ->in('article_id', $article_ids)
-            ->groupBy('article_id')
+            ->in('goods_id', $goods_ids)
+            ->groupBy('goods_id')
             ->getAll();
         $ret = [];
         foreach($data as $row) {
-            $ret[$row->article_id] = (int)$row->count;
+            $ret[$row->goods_id] = (int)$row->count;
         }
         return $ret;
     }

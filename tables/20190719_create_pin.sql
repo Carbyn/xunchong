@@ -4,5 +4,5 @@ create table `pin` (
     `user_id` bigint(20) unsigned not null default 0 comment 'user id',
     `create_time` int(11) unsigned not null default 0 comment 'create time',
     primary key (`id`),
-    unique key uniq_screenshot_author (`screenshot_id`, `user_id`)
+    unique key uniq_screenshot_user (`screenshot_id`, `user_id`)
 ) Engine=InnoDB default charset=utf8;
