@@ -13,6 +13,7 @@ class IndexController extends \Explorer\ControllerAbstract{
      * 对于如下的例子, 当访问http://yourhost/weather/index/index/index/name/explorer 的时候, 你就会发现不同
      */
 	public function indexAction($name = "Stranger") {
+        echo json_encode(\Explorer\JD::fetchPromo(28486238350));
         exit;
         $client = new Predis\Client();
         //$client->set('foo', 'bar');

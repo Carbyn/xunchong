@@ -38,6 +38,11 @@ class Constants {
 
     const ERR_LIKE_ARTICLE_NOT_EXISTS = 1501;
 
+    const PROMO_MANJIAN = 'manjian';
+    const PROMO_ZHEKOU  = 'zhekou';
+    const PROMO_FENSIJIA = 'fensijia';
+    const PROMO_ZENG     = 'zeng';
+
     private static $env;
     public static function env() {
         if (!self::$env) {
