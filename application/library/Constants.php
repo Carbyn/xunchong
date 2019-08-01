@@ -41,6 +41,7 @@ class Constants {
     const PROMO_MANJIAN = 'manjian';
     const PROMO_ZHEKOU  = 'zhekou';
     const PROMO_FENSIJIA = 'fensijia';
+    const PROMO_PLUSJIA  = 'plusjia';
     const PROMO_ZENG     = 'zeng';
 
     private static $env;

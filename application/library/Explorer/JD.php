@@ -24,6 +24,18 @@ class JD {
             if ($p['subextinfo']) {
                 $subextinfo = json_decode($p['subextinfo'], true);
                 switch($subextinfo['extType']) {
+                case 1:
+                    switch($subextinfo['subExtType']) {
+                    case 1:
+                        foreach($subextinfo['subRuleList'] as $l) {
+                            $promo[\Constants::PROMO_MANJIAN][] = [
+                                'needMoney' => (int)$l['needMoney'],
+                                'rewardMoney' => (int)$l['rewardMoney'],
+                            ];
+                        }
+                        break;
+                    }
+                    break;
                 case 2:
                     switch($subextinfo['subExtType']) {
                     case 9:
@@ -61,6 +73,11 @@ class JD {
             if (!empty($data[0]['sfp'])) {
                 $promo[\Constants::PROMO_FENSIJIA] = [
                     'sfp' => (float)$data[0]['sfp'],
+                ];
+            }
+            if (!empty($data[0]['tpp'])) {
+                $promo[\Constants::PROMO_PLUSJIA] = [
+                    'tpp' => (float)$data[0]['tpp'],
                 ];
             }
         }
