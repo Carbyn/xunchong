@@ -21,8 +21,9 @@ class JD {
         if ($data['errcode'] != 0) {
             return false;
         }
-        $promo = [];
+        $promos = [];
         foreach($data['data'][0]['pis'] as $p) {
+            unset($promo);
             if ($p['subextinfo']) {
                 $subextinfo = json_decode($p['subextinfo'], true);
                 switch($subextinfo['extType']) {
@@ -30,47 +31,52 @@ class JD {
                     switch($subextinfo['subExtType']) {
                     case 1:
                         // 28486238350
-                        $promo[\Constants::PROMO_MANJIAN] = [
+                        $promo = [
                             'starttime' => (int)$p['st'],
                             'endtime'   => (int)$p['d'],
                         ];
                         foreach($subextinfo['subRuleList'] as $l) {
-                            $promo[\Constants::PROMO_MANJIAN]['ext'] = [
+                            $promo['ext'][] = [
                                 'needMoney' => (int)$l['needMoney'],
                                 'rewardMoney' => (int)$l['rewardMoney'],
                             ];
                         }
+                        $promos[\Constants::PROMO_MANJIAN][] = $promo;
                         break;
                     }
                     break;
                 case 2:
                     switch($subextinfo['subExtType']) {
                     case 9:
-                        $promo[\Constants::PROMO_MANJIAN] = [
+                        $promo = [
                             'starttime' => (int)$p['st'],
                             'endtime'   => (int)$p['d'],
+                            'ext' => [[
+                                'needMoney' => (int)$subextinfo['needMoney'],
+                                'rewardMoney' => (int)$subextinfo['rewardMoney'],
+                            ]],
                         ];
-                        $promo[\Constants::PROMO_MANJIAN]['ext'][] = [
-                            'needMoney' => (int)$subextinfo['needMoney'],
-                            'rewardMoney' => (int)$subextinfo['rewardMoney'],
-                        ];
+                        $promos[\Constants::PROMO_MANJIAN][] = $promo;
                         break;
                     }
                     break;
                 case 14:
+                case 15:
                     switch($subextinfo['subExtType']) {
                     case 19:
+                    case 23:
                         // 47203572367
-                        $promo[\Constants::PROMO_ZHEKOU] = [
+                        $promo = [
                             'starttime' => (int)$p['st'],
                             'endtime'   => (int)$p['d'],
                         ];
                         foreach($subextinfo['subRuleList'] as $l) {
-                            $promo[\Constants::PROMO_ZHEKOU]['ext'][] = [
+                            $promo['ext'][] = [
                                 'needNum' => (int)$l['needNum'],
                                 'rebate' => (int)$l['rebate'],
                             ];
                         }
+                        $promos[\Constants::PROMO_ZHEKOU][] = $promo;
                         break;
                     }
                     break;
@@ -79,7 +85,7 @@ class JD {
             }
             if (isset($p['10'])) {
                 // 47203572367
-                $promo[\Constants::PROMO_ZENG] = [
+                $promos[\Constants::PROMO_ZENG] = [
                     'starttime' => (int)$p['st'],
                     'endtime' => (int)$p['d'],
                 ];
@@ -88,7 +94,7 @@ class JD {
                 $price = json_decode($p['customtag'], true);
                 $price = (float)$price['p'];
                 // 100000745034
-                $promo[\Constants::PROMO_MIAOSHAJIA] = [
+                $promos[\Constants::PROMO_MIAOSHAJIA] = [
                     'starttime' => (int)$p['st'],
                     'endtime' => (int)$p['d'],
                     'ext' => [
@@ -104,12 +110,12 @@ class JD {
             $data = json_decode($json, true);
             if (!empty($data[0]['sfp'])) {
                 // 28486238350
-                $promo[\Constants::PROMO_FENSIJIA] = [
+                $promos[\Constants::PROMO_FENSIJIA] = [
                     'sfp' => (float)$data[0]['sfp'],
                 ];
             }
             if (!empty($data[0]['tpp'])) {
-                $promo[\Constants::PROMO_PLUSJIA] = [
+                $promos[\Constants::PROMO_PLUSJIA] = [
                     'tpp' => (float)$data[0]['tpp'],
                 ];
             }
@@ -126,7 +132,7 @@ class JD {
                     $starttime = strtotime($times[0]);
                     $endtime = strtotime($times[1]);
                     // 598283, 7003
-                    $promo[\Constants::PROMO_COUPON][] = [
+                    $promos[\Constants::PROMO_COUPON][] = [
                         'starttime' => $starttime,
                         'endtime' => $endtime,
                         'ext' => [
@@ -138,7 +144,7 @@ class JD {
             }
         }
 
-        return $promo;
+        return $promos;
     }
 
 }
