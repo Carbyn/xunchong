@@ -42,7 +42,9 @@ class Constants {
     const PROMO_ZHEKOU  = 'zhekou';
     const PROMO_FENSIJIA = 'fensijia';
     const PROMO_PLUSJIA  = 'plusjia';
+    const PROMO_MIAOSHAJIA = 'miaoshajia';
     const PROMO_ZENG     = 'zeng';
+    const PROMO_COUPON   = 'coupon';
 
     private static $env;
     public static function env() {
