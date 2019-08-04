@@ -15,6 +15,9 @@ class IndexController extends \Explorer\ControllerAbstract{
 	public function indexAction($name = "Stranger") {
         $skuid = $this->getRequest()->getQuery('skuid');
         $cid = $this->getRequest()->getQuery('cid');
+        $sid = $this->getRequest()->getQuery('sid');
+        echo json_encode(\Explorer\Tmall::fetchPromo($skuid, $sid));
+        exit;
         echo json_encode(\Explorer\JD::fetchPromo($skuid, $cid));
         exit;
         $client = new Predis\Client();

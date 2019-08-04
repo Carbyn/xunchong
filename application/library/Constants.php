@@ -43,6 +43,7 @@ class Constants {
     const PROMO_FENSIJIA = 'fensijia';
     const PROMO_PLUSJIA  = 'plusjia';
     const PROMO_MIAOSHAJIA = 'miaoshajia';
+    const PROMO_CUXIAOJIA = 'cuxiaojia';
     const PROMO_ZENG     = 'zeng';
     const PROMO_COUPON   = 'coupon';
 

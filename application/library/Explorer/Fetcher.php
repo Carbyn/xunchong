@@ -7,7 +7,19 @@ class Fetcher {
         while ($retry > 0) {
             if (!empty($headers)) {
                 foreach($headers as $key => $val) {
-                    $curl->setHeader($key, $val);
+                    switch($key) {
+                    case 'User-Agent':
+                        $curl->setUserAgent($val);
+                        break;
+                    case 'Referer':
+                        $curl->setReferer($val);
+                        break;
+                    case 'Cookie':
+                        $curl->setCookie($val['key'], $val['val']);
+                        break;
+                    default:
+                        $curl->setHeader($key, $val);
+                    }
                 }
             }
             $curl->get($url);
