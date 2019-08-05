@@ -17,6 +17,10 @@ class Fetcher {
                     case 'Cookie':
                         $curl->setCookie($val['key'], $val['val']);
                         break;
+                    case 'Accept-Encoding':
+                        $curl->setHeader($key, $val);
+                        $curl->setOpt(CURLOPT_ENCODING, $val);
+                        break;
                     default:
                         $curl->setHeader($key, $val);
                     }

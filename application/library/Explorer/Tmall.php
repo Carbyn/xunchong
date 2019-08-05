@@ -9,8 +9,68 @@ class Tmall {
     const COOKIE = 'Ps5sKeC3Jr3WVt87czgrMRZb9bH1IWljoRjXznwtDv+zj6zvZ5nSrUIj3AeK313qqGZ4dr4ZY7aW8Jgo1vCDLA==';
     const COOKIE_COUPON = 'UoH7KlIBRN37YQ==';
 
+    const H5_PROMO_URL = 'https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?callback=mtopjsonp3&data=%s';
+
     public static function fetchPromo($skuid, $sellerid = 0) {
+        // PROMO
+        $data = ['itemNumId' => "$skuid"];
+        $promo_url = sprintf(self::H5_PROMO_URL, urlencode(json_encode($data)));
+        $headers = [
+            'Accept-Encoding' => 'gzip, deflate, br',
+            'Cookie' => ['key' => 'munb', 'val' => '104145598'],
+        ];
+        $json = Fetcher::getWithRetry($promo_url, $headers);
+        if (!$json) {
+            return false;
+        }
+
+        $json = trim($json);
+        $json = substr($json, 11, -1);
+        $data = json_decode($json, true);
+        if (!$data) {
+            return false;
+        }
+        $data = json_decode($data['data']['apiStack'][0]['value'], true);
+        if (!$data) {
+            return false;
+        }
+        if (!empty($data['price']['shopProm'])) {
+            foreach($data['price']['shopProm'] as $sp) {
+                $dates = explode('-', $sp['period']);
+                $starttime = strtotime(str_replace('.', '-', $dates[0]));
+                $endtime = strtotime(str_replace('.', '-', $dates[1]));
+                if (!empty($sp['giftOfContent'])) {
+                    $promos[\Constants::PROMO_ZENG] = [
+                        'starttime' => $starttime,
+                        'endtime' => $endtime,
+                    ];
+                } else if (!empty($sp['content'])) {
+                    if (preg_match('/满(\d+)元,省(\d+)元/', $sp['content'][0], $matches)) {
+                        $promos[\Constants::PROMO_MANJIAN][] = [
+                            'starttime' => $starttime,
+                            'endtime' => $endtime,
+                            'ext' => [[
+                                'needMoney' => (float)$matches[1],
+                                'rewardMoney' => (float)$matches[2],
+                            ]],
+                        ];
+                    }
+                }
+            }
+        }
+        if (!empty($data['price']['transmitPrice'])) {
+            $promos[\Constants::PROMO_CUXIAOJIA] = [
+                'starttime' => time(),
+                // todo
+                'endtime' => time() + 86400 * 2,
+                'ext' => [
+                    'price' => (float)$data['price']['transmitPrice']['priceText'],
+                ],
+            ];
+        }
+
         // COUPON
+        // TODO
         $coupon_url = sprintf(self::COUPON_URL, $skuid, $sellerid);
         $headers = [
             'Cookie'  => ['key' => 'cookie17', 'val' => self::COOKIE_COUPON],
@@ -46,7 +106,11 @@ class Tmall {
             }
         }
 
+
+        return $promos;
+
         // PROMO
+        /*
         $promo_url = sprintf(self::PROMO_URL, $skuid);
         $referer = sprintf(self::REFERER, $skuid);
         $headers = [
@@ -109,7 +173,7 @@ class Tmall {
                     }
                 }
             }
-        }
+        }*/
 
         return $promos;
     }
