@@ -13,17 +13,8 @@ class IndexController extends \Explorer\ControllerAbstract{
      * 对于如下的例子, 当访问http://yourhost/weather/index/index/index/name/explorer 的时候, 你就会发现不同
      */
 	public function indexAction($name = "Stranger") {
-        var_dump(1, \Explorer\Ali::getTopClient());exit;
-        $tc = new TopClient();
-        $tc->appkey = '27740812';
-        $tc->secretKey = '43acc142d078483fe662ee9498cc9f6c';
-        $req = new TbkUatmFavoritesGetRequest();
-        $req->setPageNo("1");
-        $req->setPageSize("20");
-        $req->setFields("favorites_title,favorites_id,type");
-        $req->setType("1");
-        $resp = $c->execute($req);
-        var_dump($resp);exit;
+        $resp = \Explorer\Tbk::getFavoritesList();
+        echo json_encode($resp);exit;
 
         exit;
         $skuid = $this->getRequest()->getQuery('skuid');
