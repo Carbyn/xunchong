@@ -24,5 +24,6 @@ CREATE TABLE `goods` (
     primary key (`id`),
     unique key `uniq_oid_platform` (`oid`, `platform`),
     key `idx_cat` (`cat_id`),
-    key `idx_leaf_cat` (`leaf_cat_id`)
+    key `idx_leaf_cat` (`leaf_cat_id`),
+    FULLTEXT KEY `ft_title` (`title`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB AUTO_INCREMENT=20190806 DEFAULT CHARSET=utf8;

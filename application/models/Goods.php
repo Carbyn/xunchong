@@ -52,6 +52,20 @@ class GoodsModel extends AbstractModel {
         return $goods_list;
     }
 
+    public function search($query, $pn, $ps) {
+        $pn = (int)$pn;
+        $offset = ($pn - 1) * $ps;
+        $sql = 'select * from '.self::TABLE." where match(title) against(?) order by id desc limit $offset, $ps";
+        $goods_list = $this->db->query($sql, [$query]);
+        if (empty($goods_list)) {
+            return [];
+        }
+        foreach($goods_list as &$goods) {
+            $goods = $this->format($goods);
+        }
+        return $goods_list;
+    }
+
     public function update($id, $update) {
         $where['id'] = $id;
         return $this->db->table(self::TABLE)->where($where)->update($update);
