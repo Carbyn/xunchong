@@ -9,4 +9,17 @@ class GoodsController extends \Explorer\ControllerAbstract {
         $this->outputSuccess(compact('goods_list'));
     }
 
+    public function detailAction() {
+        $id = $this->getRequest()->getQuery('id');
+        if (!$id) {
+            return $this->outputError(Constants::ERR_GOODS_ID_INVALID, '商品不存在');
+        }
+        $goodsModel = new GoodsModel();
+        $goods = $goodsModel->fetch($id);
+        if (!$goods) {
+            return $this->outputError(Constants::ERR_GOODS_ID_INVALID, '商品不存在');
+        }
+        $this->outputSuccess(compact('goods'));
+    }
+
 }

@@ -38,6 +38,8 @@ class Constants {
 
     const ERR_LIKE_ARTICLE_NOT_EXISTS = 1501;
 
+    const ERR_GOODS_ID_INVALID = 1601;
+
     const GOODS_PLATFORM_TBK = 1;
     const GOODS_PLATFORM_JD  = 2;
 

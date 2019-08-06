@@ -20,6 +20,23 @@ class GoodsModel extends AbstractModel {
         return $this->format($goods);
     }
 
+    public function fetchAllByPlatform($platform, $pn, $ps) {
+        $where['platform'] = $platform;
+        $offset = ($pn - 1) * $ps;
+        $goods_list = $this->db->table(self::TABLE)
+            ->where($where)
+            ->orderBy('id', 'DESC')
+            ->limit($offset, $ps)
+            ->getAll();
+        if (empty($goods_list)) {
+            return [];
+        }
+        foreach($goods_list as &$goods) {
+            $goods = $this->format($goods);
+        }
+        return $goods_list;
+    }
+
     public function fetchAll($pn, $ps) {
         $offset = ($pn - 1) * $ps;
         $goods_list = $this->db->table(self::TABLE)
