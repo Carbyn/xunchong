@@ -19,7 +19,7 @@ class Tbk {
         $req->setPageSize($ps);
         $req->setPlatform(2); // 1: PC, 2: WAP
         $req->setAdzoneId(109253950012); // mm_15956357_660300410_109253950012
-        $req->setFields("num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,coupon_start_time,coupon_end_time,coupon_id,coupon_total_count,coupon_remain_count,coupon_info,coupon_start_fee,coupon_amount,item_url,click_url,coupon_click_url,coupon_share_url,seller_id,volume,nick,shop_title,zk_final_price_wap,event_start_time,event_end_time,tk_rate,status,type");
+        $req->setFields("num_iid,title,pict_url,small_images,reserve_price,zk_final_price,tk_rate,user_type,provcity,coupon_start_time,coupon_end_time,coupon_id,coupon_total_count,coupon_remain_count,coupon_info,coupon_start_fee,coupon_amount,item_url,click_url,coupon_click_url,coupon_share_url,seller_id,volume,nick,shop_title,zk_final_price_wap,event_start_time,event_end_time,tk_rate,status,type");
         $resp = Ali::getTopClient()->execute($req);
         return $resp;
     }

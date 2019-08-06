@@ -8,6 +8,7 @@ CREATE TABLE `goods` (
     `reserve_price` decimal(20, 2) NOT NULL DEFAULT 0 COMMENT 'reserve price, ￥1.23',
     `final_price` decimal(20, 2) NOT NULL DEFAULT 0 COMMENT 'final price, ￥1.23',
     `volume` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'volume',
+    `tk_rate` decimal(20, 2) NOT NULL DEFAULT 0 COMMENT 'tk_rate',
     `click_url` varchar(1024) NOT NULL DEFAULT '' COMMENT 'click url',
     `click_url_tpwd` varchar(64) NOT NULL DEFAULT '' COMMENT 'click url tpwd',
     `coupon_click_url` varchar(1024) NOT NULL DEFAULT '' COMMENT 'coupon click url',

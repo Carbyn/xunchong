@@ -62,6 +62,7 @@ class CrawlTbk {
             'reserve_price' => (float)$item['reserve_price'],
             'final_price' => (float)$item['zk_final_price_wap'],
             'volume' => (int)$item['volume'],
+            'tk_rate' => (float)$item['tk_rate'],
             'click_url' => $item['click_url'],
             'click_url_tpwd' => $item['click_url_tpwd'],
             'coupon_click_url' => $item['coupon_click_url'],
