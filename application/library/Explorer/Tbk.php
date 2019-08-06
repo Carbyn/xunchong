@@ -27,6 +27,7 @@ class Tbk {
     public static function getItemInfo($id) {
         $req = new \TbkItemInfoGetRequest();
         $req->setNumIids($id);
+        $req->setPlatform(2); // 1: PC, 2: WAP
         $resp = Ali::getTopClient()->execute($req);
         return $resp;
     }

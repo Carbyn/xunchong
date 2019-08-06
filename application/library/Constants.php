@@ -38,6 +38,9 @@ class Constants {
 
     const ERR_LIKE_ARTICLE_NOT_EXISTS = 1501;
 
+    const GOODS_PLATFORM_TBK = 1;
+    const GOODS_PLATFORM_JD  = 2;
+
     const PROMO_MANJIAN = 'manjian';
     const PROMO_ZHEKOU  = 'zhekou';
     const PROMO_FENSIJIA = 'fensijia';
