@@ -9,10 +9,10 @@ class ImportCategory {
         ['cid' => 100, 'pcid' => 0, 'name' => '猫猫', 'icon' => ''],
         ['cid' => 200, 'pcid' => 0, 'name' => '狗狗', 'icon' => ''],
 
-        ['cid' => 10000, 'pcid' => 100, 'name' => '干粮系列', 'icon' => ''],
+        ['cid' => 10000, 'pcid' => 100, 'name' => '主粮系列', 'icon' => ''],
         ['cid' => 10001, 'pcid' => 100, 'name' => '零食系列', 'icon' => ''],
 
-        ['cid' => 20000, 'pcid' => 200, 'name' => '干粮系列', 'icon' => ''],
+        ['cid' => 20000, 'pcid' => 200, 'name' => '主粮系列', 'icon' => ''],
         ['cid' => 20001, 'pcid' => 200, 'name' => '医疗系列', 'icon' => ''],
 
         ['cid' => 1000000, 'pcid' => 10000, 'name' => '进口粮', 'icon' => 'http://img.boqiicdn.com/Data/Shop/0/0/0/shopcat_pic1515038606_thumb.jpg'],

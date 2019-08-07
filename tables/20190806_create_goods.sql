@@ -4,6 +4,7 @@ CREATE TABLE `goods` (
     `platform` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '1: tbk, 2: jd',
     `title` varchar(128) NOT NULL DEFAULT '' COMMENT 'title',
     `cat_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'cat id',
+    `s_cat_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'secondnary cat id',
     `leaf_cat_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'leaf cat id',
     `reserve_price` decimal(20, 2) NOT NULL DEFAULT 0 COMMENT 'reserve price, ￥1.23',
     `final_price` decimal(20, 2) NOT NULL DEFAULT 0 COMMENT 'final price, ￥1.23',
@@ -24,6 +25,7 @@ CREATE TABLE `goods` (
     primary key (`id`),
     unique key `uniq_oid_platform` (`oid`, `platform`),
     key `idx_cat` (`cat_id`),
+    key `idx_s_cat` (`s_cat_id`),
     key `idx_leaf_cat` (`leaf_cat_id`),
     FULLTEXT KEY `ft_title` (`title`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB AUTO_INCREMENT=20190806 DEFAULT CHARSET=utf8;

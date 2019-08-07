@@ -50,12 +50,9 @@ class CategoryModel extends AbstractModel {
         return $data;
     }
 
-    public function fetchCatByName($name) {
-        return 101;
-    }
-
-    public function fetchLeafCatByName($name) {
-        return 10101;
+    public function fetchCatByPcidAndName($pcid, $name) {
+        $where = compact('pcid', 'name');
+        return $this->db->table(self::TABLE)->where($where)->get();
     }
 
 }

@@ -2,10 +2,10 @@
 namespace Explorer;
 class Tbk {
 
-    public static function getFavoritesList() {
+    public static function getFavoritesList($pn, $ps) {
         $req = new \TbkUatmFavoritesGetRequest();
-        $req->setPageNo(1);
-        $req->setPageSize(20);
+        $req->setPageNo($pn);
+        $req->setPageSize($ps);
         $req->setFields("favorites_title,favorites_id,type");
         $req->setType(-1);
         $resp = Ali::getTopClient()->execute($req);

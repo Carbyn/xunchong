@@ -76,7 +76,7 @@ class GoodsModel extends AbstractModel {
             return false;
         }
         $goods = (array)$goods;
-        $goods['small_images'] = explode('|', $goods['small_images']);
+        $goods['small_images'] = empty($goods['small_images']) ? [] : explode('|', $goods['small_images']);
 
         // union
         if ($goods['union_coupon_info']) {

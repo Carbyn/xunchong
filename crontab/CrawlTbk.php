@@ -6,44 +6,54 @@ $app->execute(['CrawlTbk', 'run']);
 class CrawlTbk {
 
     public static function run() {
-        $favList = \Explorer\Tbk::getFavoritesList();
-        if (!$favList) {
-            echo "getFavoritesList failed\n";
-            return;
-        }
-        foreach($favList->results->tbk_favorites as $fav) {
-            for($i = 1; $i < 3; $i++) {
-                $items = \Explorer\Tbk::getFavoritesItem($fav->favorites_id, $i, 10);
-                if (!$items) {
-                    echo "getFavoritesItem:$fid failed\n";
+        $pn = 1;
+        while(true) {
+            $favList = \Explorer\Tbk::getFavoritesList($pn++, 1);
+            if (!$favList || empty((array)$favList->results)) {
+                echo "getFavoritesList failed\n";
+                break;
+            }
+            foreach($favList->results->tbk_favorites as $fav) {
+                echo "{$fav->favorites_title} begin\n";
+                $categories = self::parseCategory($fav->favorites_title);
+                if (!$categories) {
                     continue;
                 }
-                foreach($items->results->uatm_tbk_item as &$item) {
-                    $item = (array)$item;
-                    $urls = ['click_url', 'coupon_click_url'];
-                    foreach($urls as $url) {
-                        if (empty($item[$url])) {
-                            $item[$url] = '';
-                            $item[$url.'_tpwd'] = '';
+                $i = 1;
+                while(true) {
+                    $items = \Explorer\Tbk::getFavoritesItem($fav->favorites_id, $i++, 10);
+                    if (!$items || empty($items->results)) {
+                        echo "getFavoritesItem:{$fav->favorites_id} failed\n";
+                        break;
+                    }
+                    foreach($items->results->uatm_tbk_item as &$item) {
+                        $item = (array)$item;
+                        $urls = ['click_url', 'coupon_click_url'];
+                        foreach($urls as $url) {
+                            if (empty($item[$url])) {
+                                $item[$url] = '';
+                                $item[$url.'_tpwd'] = '';
+                                continue;
+                            }
+                            $tpwd = (array)\Explorer\Tbk::createTpwd($item[$url], $item['title'], $item['pict_url']);
+                            if (empty($tpwd['data'])) {
+                                $item[$url.'_tpwd'] = '';
+                                echo "createTpwd:{$item['num_iid']} failed\n";
+                                continue;
+                            }
+                            $item[$url.'_tpwd'] = $tpwd['data']->model;
+                        }
+                        $info = \Explorer\Tbk::getItemInfo($item['num_iid']);
+                        if (!$info) {
+                            echo "getItemInfo:{$item['num_iid']} failed\n";
                             continue;
                         }
-                        $tpwd = (array)\Explorer\Tbk::createTpwd($item[$url], $item['title'], $item['pict_url']);
-                        if (empty($tpwd['data'])) {
-                            echo "createTpwd:{$item['num_iid']} failed\n";
-                            continue;
-                        }
-                        $item[$url.'_tpwd'] = $tpwd['data']->model;
+                        $item['categories'] = $categories;
+                        self::saveGoods($item);
+                        echo "{$item['num_iid']} saved\n";
                     }
-                    $info = \Explorer\Tbk::getItemInfo($item['num_iid']);
-                    if (!$info) {
-                        echo "getItemInfo:{$item['num_iid']} failed\n";
-                        continue;
-                    }
-                    $item['cat_name'] = $info->results->n_tbk_item[0]->cat_name;
-                    $item['cat_leaf_name'] = $info->results->n_tbk_item[0]->cat_leaf_name;
-                    self::saveGoods($item);
-                    echo "{$item['num_iid']} saved\n";
                 }
+                echo "{$fav->favorites_title} end\n";
             }
         }
         echo "done\n";
@@ -57,8 +67,9 @@ class CrawlTbk {
             'oid' => (string)$item['num_iid'],
             'platform' => \Constants::GOODS_PLATFORM_TBK,
             'title' => $item['title'],
-            'cat_id' => $categoryModel->fetchCatByName($item['cat_name']),
-            'leaf_cat_id' => $categoryModel->fetchLeafCatByName($item['cat_leaf_name']),
+            'cat_id' => $item['categories'][0]->cid,
+            's_cat_id' => $item['categories'][1]->cid,
+            'leaf_cat_id' => $item['categories'][2]->cid,
             'reserve_price' => (float)$item['reserve_price'],
             'final_price' => (float)$item['zk_final_price_wap'],
             'volume' => (int)$item['volume'],
@@ -71,7 +82,7 @@ class CrawlTbk {
             'pict_url' => $item['pict_url'],
             'seller_id' => (string)$item['seller_id'],
             'shop_title' => $item['shop_title'],
-            'small_images' => implode('|', $item['small_images']->string),
+            'small_images' => empty($item['small_images']) ? '' : implode('|', $item['small_images']->string),
             'provcity' => $item['provcity'],
             'union_coupon_info' => self::parseCoupon($item),
         ];
@@ -84,6 +95,31 @@ class CrawlTbk {
         } else {
             $goodsModel->create($data);
         }
+    }
+
+    private static function parseCategory($title) {
+        $category = explode('-', $title);
+        if (count($category) != 3) {
+            echo "{$title} format unsupport\n";
+            return false;
+        }
+        $categoryModel = new CategoryModel();
+        $c = $categoryModel->fetchCatByPcidAndName(0, $category[0]);
+        if (!$c) {
+            echo "{$category[0]} not found\n";
+            return false;
+        }
+        $cc = $categoryModel->fetchCatByPcidAndName($c->cid, $category[1]);
+        if (!$cc) {
+            echo "{$c->cid}, $category[1] not found\n";
+            return false;
+        }
+        $ccc = $categoryModel->fetchCatByPcidAndName($cc->cid, $category[2]);
+        if (!$ccc) {
+            echo "{$cc->cid}, $category[2] not found\n";
+            return false;
+        }
+        return [$c, $cc, $ccc];
     }
 
     private static function parseCoupon($item) {
