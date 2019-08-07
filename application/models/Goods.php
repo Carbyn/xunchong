@@ -52,6 +52,35 @@ class GoodsModel extends AbstractModel {
         return $goods_list;
     }
 
+    public function fetchByCid($level, $cid, $pn, $ps) {
+        switch($level) {
+        case 1:
+            $where['cat_id'] = $cid;
+            break;
+        case 2:
+            $where['s_cat_id'] = $cid;
+            break;
+        case 3:
+            $where['leaf_cat_id'] = $cid;
+            break;
+        default:
+            return [];
+        }
+        $offset = ($pn - 1) * $ps;
+        $goods_list = $this->db->table(self::TABLE)
+            ->where($where)
+            ->orderBy('id', 'DESC')
+            ->limit($offset, $ps)
+            ->getAll();
+        if (empty($goods_list)) {
+            return [];
+        }
+        foreach($goods_list as &$goods) {
+            $goods = $this->format($goods);
+        }
+        return $goods_list;
+    }
+
     public function search($query, $pn, $ps) {
         $pn = (int)$pn;
         $offset = ($pn - 1) * $ps;
