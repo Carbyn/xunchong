@@ -11,7 +11,6 @@ class ReportController extends \Explorer\ControllerAbstract {
 
         $reportModel = new ReportModel();
         $reports = $reportModel->getByGoodsId($goodsId);
-        // var_dump($reports);
         if (empty($reports)) {
             $content = json_encode(array($itemId=>1));
             $ret = $reportModel->create($goodsId, $content);
