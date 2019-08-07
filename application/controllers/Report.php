@@ -38,7 +38,6 @@ class ReportController extends \Explorer\ControllerAbstract {
         if (!$itemId || !$this->isItemidValid($itemId)) {
             return array($errno, 'item_id为空or不合法');
         }
-
         $goodsModel = new GoodsModel();
         if (!$goodsModel->exists($goodsId, $platform=1)) {
             return array($errno, 'goods not exists');
