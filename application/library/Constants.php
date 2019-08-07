@@ -3,6 +3,7 @@ class Constants {
 
     const ERR_SYS_NOT_LOGGED       = 101;
     const ERR_SYS_ERROR            = 102;
+    const ERR_SYS_PARAM_INVALID    = 103;
 
     const ERR_LOGIN_MOBILE_INVALID = 1001;
     const ERR_LOGIN_SEND_FAILED    = 1002;
