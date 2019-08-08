@@ -1,7 +1,8 @@
 <?php
 
-class Autoloader{
-  
+
+class JdAutoloader{
+
   /**
      * 类库自动加载，写死路径，确保不加载其他文件。
      * @param string $class 对象类名
@@ -12,20 +13,14 @@ class Autoloader{
         if(false !== strpos($name,'\\')){
           $name = strstr($class, '\\', true);
         }
-        
-        $filename = TOP_AUTOLOADER_PATH."/top/".$name.".php";
+
+        $filename = JDK_AUTOLOADER_PATH."/top/".$name.".php";
         if(is_file($filename)) {
             include $filename;
             return;
         }
 
-        $filename = TOP_AUTOLOADER_PATH."/top/request/".$name.".php";
-        if(is_file($filename)) {
-            include $filename;
-            return;
-        }
-
-        $filename = TOP_AUTOLOADER_PATH."/top/domain/".$name.".php";
+        $filename = JDK_AUTOLOADER_PATH."/top/request/".$name.".php";
         if(is_file($filename)) {
             include $filename;
             return;
@@ -33,5 +28,5 @@ class Autoloader{
     }
 }
 
-spl_autoload_register('Autoloader::autoload');
+spl_autoload_register('JdAutoloader::autoload');
 ?>

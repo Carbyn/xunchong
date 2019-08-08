@@ -7,4 +7,7 @@ define('TOP_SDK_DEV_MODE', true);
 define('TOP_AUTOLOADER_PATH', APPLICATION_PATH.'/application/library/Ali');
 require_once(APPLICATION_PATH.'/application/library/Ali/TopSdk.php');
 
+define('JDK_AUTOLOADER_PATH', APPLICATION_PATH.'/application/library/Jd');
+require_once(APPLICATION_PATH.'/application/library/Jd/JdSdk.php');
+
 $app = new Yaf\Application(APPLICATION_PATH.'/conf/application.ini');

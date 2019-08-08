@@ -7,7 +7,7 @@ class JDK {
     public static function getTopClient(){
         if (empty(self::$tc)) {
             $config = new \Yaf\Config\Ini(APPLICATION_PATH.'/conf/jdk.ini');
-            self::$tc = new \TopClient();
+            self::$tc = new \JdTopClient();
             self::$tc->appkey = $config->jdk->appkey;
             self::$tc->secretKey = $config->jdk->secretkey;
             self::$tc->format = 'json';

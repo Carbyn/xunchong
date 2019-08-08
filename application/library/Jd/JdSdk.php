@@ -28,9 +28,9 @@ if (!defined("JD_SDK_DEV_MODE"))
 	define("JD_SDK_DEV_MODE", true);
 }
 
-if (!defined("TOP_AUTOLOADER_PATH"))
+if (!defined("JDK_AUTOLOADER_PATH"))
 {
-	define("TOP_AUTOLOADER_PATH", dirname(__FILE__));
+	define("JDK_AUTOLOADER_PATH", dirname(__FILE__));
 }
 
 /**
