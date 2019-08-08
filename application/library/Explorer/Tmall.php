@@ -9,7 +9,7 @@ class Tmall {
     const COOKIE = 'Ps5sKeC3Jr3WVt87czgrMRZb9bH1IWljoRjXznwtDv+zj6zvZ5nSrUIj3AeK313qqGZ4dr4ZY7aW8Jgo1vCDLA==';
     const COOKIE_COUPON = 'UoH7KlIBRN37YQ==';
 
-    const H5_PROMO_URL = 'https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?type=json&data=%s';
+    const H5_PROMO_URL = 'https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?type=json&data=%s&t=%s';
 
     public static function fetchPromo($skuid, $sellerid = 0) {
         // PROMO
@@ -21,13 +21,14 @@ class Tmall {
             'detail_v' => '8.0.0',
             'utdid' => '1',
         ];
-        $promo_url = sprintf(self::H5_PROMO_URL, urlencode(json_encode($data)));
+        $t = intval(microtime(true) * 1000);
+        $promo_url = sprintf(self::H5_PROMO_URL, urlencode(json_encode($data)), $t);
         $headers = [
             'Accept-Encoding' => 'gzip, deflate, br',
             'Cookie' => ['key' => 'munb', 'val' => '1041455987'],
         ];
         $json = Fetcher::getWithRetry($promo_url, $headers);
-        //var_dump($json);exit;
+        // var_dump($json);
         if (!$json) {
             return false;
         }
