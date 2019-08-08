@@ -82,10 +82,21 @@ class CrawlTbk {
             'pict_url' => $item['pict_url'],
             'seller_id' => (string)$item['seller_id'],
             'shop_title' => $item['shop_title'],
-            'small_images' => empty($item['small_images']) ? '' : implode('|', $item['small_images']->string),
             'provcity' => $item['provcity'],
             'union_coupon_info' => self::parseCoupon($item),
         ];
+
+        if (!empty($item['small_images'])) {
+            $item['small_images'] = (array)$item['small_images'];
+            if (!empty($item['small_images']['string'])) {
+                $data['small_images'] = implode('|', $item['small_images']['string']);
+            }
+        }
+
+        $promos = \Explorer\Tmall::fetchPromo($item['num_iid'], $item['seller_id']);
+        if ($promos) {
+            $data['official_coupon_info'] = json_encode($promos);
+        }
 
         // echo json_encode($data);exit;
 
