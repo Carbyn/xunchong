@@ -4,3 +4,5 @@ static
 *.swo
 *.swp
 .env
+.DS_Store
+vendor*
