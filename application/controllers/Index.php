@@ -13,15 +13,14 @@ class IndexController extends \Explorer\ControllerAbstract{
      * 对于如下的例子, 当访问http://yourhost/weather/index/index/index/name/explorer 的时候, 你就会发现不同
      */
 	public function indexAction($name = "Stranger") {
-        $resp = \Explorer\Tbk::getFavoritesList();
-        echo json_encode($resp);exit;
-
-        exit;
         $skuid = $this->getRequest()->getQuery('skuid');
         $cid = $this->getRequest()->getQuery('cid');
         $sid = $this->getRequest()->getQuery('sid');
         echo json_encode(\Explorer\Tmall::fetchPromo($skuid, $sid));
         exit;
+        $resp = \Explorer\Tbk::getFavoritesList();
+        echo json_encode($resp);exit;
+
         echo json_encode(\Explorer\JD::fetchPromo($skuid, $cid));
         exit;
         $client = new Predis\Client();

@@ -9,10 +9,35 @@ class CrawlJdCategory {
     const CATID_XUNCHONG = 6994;
 
     public static function run() {
-        $categories = \Explorer\JDKApis::getGoodsCategory(self::CATID_XUNCHONG, 1);
-        var_dump($categories);exit;
+        $categories = self::extractJdCategory(self::CATID_XUNCHONG, 1);
         if ($categories) {
+            foreach ($categories as &$c1) {
+                $c1['children'] = self::extractJdCategory($c1['cid'], 2);
+            }
+            echo "Crawl jd category succ\n";
+            echo json_encode($categories)."\n";
         }
+        echo "Crawl jd category fail\n";
+        return;
+    }
+
+    private static function extractJdCategory($parentId, $grade) {
+        $rsp = \Explorer\JDKApis::getGoodsCategory($parentId, $grade);
+        if ($rsp && !empty($rsp->result)) {
+            if (false !== ($res = json_decode($rsp->result))) {
+                if (!empty($res->data)) {
+                    foreach ($res->data as $item) {
+                        $categories[] = [
+                            'cid'  => $item->id,
+                            'pcid' => $item->parentId,
+                            'name' => $item->name,
+                            'icon' => '',
+                        ];
+                    }
+                }
+            }
+        }
+        return isset($categories) ? $categories : false;
     }
 }
 
