@@ -17,7 +17,6 @@ class CrawlJdCategory {
             echo "Crawl jd category succ\n";
             echo json_encode($categories)."\n";
         }
-        echo "Crawl jd category fail\n";
         return;
     }
 

@@ -272,7 +272,7 @@ class JdTopClient
         // https://router.jd.com/apiv=1.0&method=jd.union.open.category.goods.get&access_token=&app_key=&sign_method=&format=json&timestamp=2019-08-08 21:01:04&sign=B62BF4C583EE4F3DFAE7B6E72130EF7D&param_json={"req":{"parentId":0,"grade":0}}
 		$requestUrl .= "param_json=".$apiParams['param_json']; // 不能urlencode，tmd会出错。。
 		// $requestUrl = substr($requestUrl, 0, -1);
-        echo $requestUrl."\n";
+        // echo $requestUrl."\n";
 
 		//发起HTTP请求
 		try
