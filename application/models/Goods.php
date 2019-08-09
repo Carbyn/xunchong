@@ -37,55 +37,42 @@ class GoodsModel extends AbstractModel {
         return $goods_list;
     }
 
-    public function fetchAll($pn, $ps) {
+    public function fetchAll($level, $cid, $query, $pn, $ps) {
+        $pn = max($pn, 1);
         $offset = ($pn - 1) * $ps;
-        $goods_list = $this->db->table(self::TABLE)
-            ->orderBy('id', 'DESC')
-            ->limit($offset, $ps)
-            ->getAll();
-        if (empty($goods_list)) {
-            return [];
-        }
-        foreach($goods_list as &$goods) {
-            $goods = $this->format($goods);
-        }
-        return $goods_list;
-    }
 
-    public function fetchByCid($level, $cid, $pn, $ps) {
-        switch($level) {
-        case 1:
-            $where['cat_id'] = $cid;
-            break;
-        case 2:
-            $where['s_cat_id'] = $cid;
-            break;
-        case 3:
-            $where['leaf_cat_id'] = $cid;
-            break;
-        default:
-            return [];
+        $where = [];
+        if ($level && $cid) {
+            switch($level) {
+            case 1:
+                $where['cat_id'] = $cid;
+                break;
+            case 2:
+                $where['s_cat_id'] = $cid;
+                break;
+            case 3:
+                $where['leaf_cat_id'] = $cid;
+                break;
+            default:
+            }
         }
-        $offset = ($pn - 1) * $ps;
-        $goods_list = $this->db->table(self::TABLE)
-            ->where($where)
-            ->orderBy('id', 'DESC')
-            ->limit($offset, $ps)
-            ->getAll();
-        if (empty($goods_list)) {
-            return [];
-        }
-        foreach($goods_list as &$goods) {
-            $goods = $this->format($goods);
-        }
-        return $goods_list;
-    }
 
-    public function search($query, $pn, $ps) {
-        $pn = (int)$pn;
-        $offset = ($pn - 1) * $ps;
-        $sql = 'select * from '.self::TABLE." where match(title) against(?) order by id desc limit $offset, $ps";
-        $goods_list = $this->db->query($sql, [$query]);
+        if ($query) {
+            $sql = 'select * from '.self::TABLE." where match(title) against(?)";
+            if (!empty($where)) {
+                $whereStr = key($where).'='.current($where);
+                $sql .= ' and '.$whereStr;
+            }
+            $sql .= " order by id desc limit $offset, $ps";
+            $goods_list = $this->db->query($sql, [$query]);
+        } else {
+            $goods_list = $this->db->table(self::TABLE);
+            if (!empty($where)) {
+                $goods_list = $goods_list->where($where);
+            }
+            $goods_list = $goods_list->orderBy('id', 'DESC')->limit($offset, $ps)->getAll();
+        }
+
         if (empty($goods_list)) {
             return [];
         }
