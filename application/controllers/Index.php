@@ -13,7 +13,6 @@ class IndexController extends \Explorer\ControllerAbstract{
      * 对于如下的例子, 当访问http://yourhost/weather/index/index/index/name/explorer 的时候, 你就会发现不同
      */
 	public function indexAction($name = "Stranger") {
-        var_dump(\Explorer\Tbk::getItemInfo(532881477601));exit;
         $skuid = $this->getRequest()->getQuery('skuid');
         $cid = $this->getRequest()->getQuery('cid');
         $sid = $this->getRequest()->getQuery('sid');

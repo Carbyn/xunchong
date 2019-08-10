@@ -136,26 +136,30 @@ class JD {
                 $popId = $matches[1];
                 $coupon_url = sprintf(self::COUPON_URL, $cid, $popId, $skuid);
                 $headers['Referer'] = sprintf(self::REFERER, $skuid);
-                // todo, {"ret":0,"msg":"","coupons":[],"sku_info":{"sku":"53181307787","useJing":"0","useDong":"0","global":"0","jdPrice":"0","limitCouponType":[],"limitCouponDesc":"不可使用京券东券"}}
-                $json = Fetcher::getWithRetry($coupon_url, $headers);
-                if ($json) {
-                    $data = json_decode($json, true);
-                    if ($data['ret'] == 0 && !empty($data['coupons'])) {
-                        foreach($data['coupons'] as $c) {
-                            $times = explode(' - ', str_replace('.', '-', $c['timeDesc']));
-                            $starttime = strtotime($times[0]);
-                            $endtime = strtotime($times[1]) + 86400 - 1;
-                            // 598283, 7003
-                            $promos[\Constants::PROMO_COUPON][] = [
-                                'starttime' => $starttime,
-                                'endtime' => $endtime,
-                                'ext' => [[
-                                    'needMoney' => $c['quota'],
-                                    'rewardMoney' => $c['discount'],
-                                ]],
-                            ];
+                $data = [];
+                $c = 3;
+                while($c-- > 0) {
+                    $json = Fetcher::getWithRetry($coupon_url, $headers);
+                    if ($json) {
+                        $data = json_decode($json, true);
+                        if ($data['ret'] == 0 && !empty($data['coupons'])) {
+                            break;
                         }
                     }
+                }
+                foreach($data['coupons'] as $c) {
+                    $times = explode(' - ', str_replace('.', '-', $c['timeDesc']));
+                    $starttime = strtotime($times[0]);
+                    $endtime = strtotime($times[1]) + 86400 - 1;
+                    // 598283, 7003
+                    $promos[\Constants::PROMO_COUPON][] = [
+                        'starttime' => $starttime,
+                        'endtime' => $endtime,
+                        'ext' => [[
+                            'needMoney' => $c['quota'],
+                            'rewardMoney' => $c['discount'],
+                        ]],
+                    ];
                 }
             }
         }
