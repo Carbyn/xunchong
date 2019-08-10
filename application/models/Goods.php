@@ -63,13 +63,12 @@ class GoodsModel extends AbstractModel {
                 $whereStr = key($where).'='.current($where);
                 $sql .= ' and '.$whereStr;
             }
-            $sql .= " order by score desc limit $offset, $ps";
+            $sql .= " and status = 0 order by score desc limit $offset, $ps";
             $goods_list = $this->db->query($sql, [$query]);
         } else {
             $goods_list = $this->db->table(self::TABLE);
-            if (!empty($where)) {
-                $goods_list = $goods_list->where($where);
-            }
+            $where['status'] = 0;
+            $goods_list = $goods_list->where($where);
             $goods_list = $goods_list->orderBy('score', 'DESC')->limit($offset, $ps)->getAll();
         }
 

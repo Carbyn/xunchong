@@ -9,7 +9,8 @@ class CrawlTbk {
         $pn = 1;
         while(true) {
             $favList = \Explorer\Tbk::getFavoritesList($pn++, 1);
-            if (!$favList || empty((array)$favList->results)) {
+            // if (!$favList || !isset($favList['results'])) {
+            if (!$favList || !property_exists($favList, 'results') || !property_exists($favList->results, 'tbk_favorites')) {
                 echo "getFavoritesList failed\n";
                 break;
             }
@@ -22,7 +23,7 @@ class CrawlTbk {
                 $i = 1;
                 while(true) {
                     $items = \Explorer\Tbk::getFavoritesItem($fav->favorites_id, $i++, 10);
-                    if (!$items || empty($items->results)) {
+                    if (!$items || !property_exists($items, 'results') || !property_exists($items->results, 'uatm_tbk_item')) {
                         echo "getFavoritesItem:{$fav->favorites_id} failed\n";
                         break;
                     }
@@ -43,9 +44,8 @@ class CrawlTbk {
                             }
                             $item[$url.'_tpwd'] = $tpwd['data']->model;
                         }
-                        $info = \Explorer\Tbk::getItemInfo($item['num_iid']);
-                        if (!$info) {
-                            echo "getItemInfo:{$item['num_iid']} failed\n";
+                        if (empty($item['click_url'])) {
+                            echo "item click_url empty: {$item['num_iid']}\n";
                             continue;
                         }
                         $item['categories'] = $categories;
@@ -95,10 +95,11 @@ class CrawlTbk {
             }
         }
 
-        $promos = \Explorer\Tmall::fetchPromo($item['num_iid'], $item['seller_id']);
-        if ($promos) {
-            $data['official_coupon_info'] = json_encode($promos);
-        }
+        // todo, it's not working now
+        // $promos = \Explorer\Tmall::fetchPromo($item['num_iid'], $item['seller_id']);
+        // if ($promos) {
+        //     $data['official_coupon_info'] = json_encode($promos);
+        // }
 
         // echo json_encode($data);exit;
 

@@ -23,6 +23,7 @@ CREATE TABLE `goods` (
     `union_coupon_info` varchar(512) NOT NULL DEFAULT '' COMMENT 'coupon info',
     `official_coupon_info` varchar(5120) NOT NULL DEFAULT '' COMMENT 'coupon info',
     `score` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'sort score, based on volume and tk_rate',
+    `status` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT 'goods status, default: 0, deleted: 1',
     primary key (`id`),
     unique key `uniq_oid_platform` (`oid`, `platform`),
     key `idx_score` (`score`),
