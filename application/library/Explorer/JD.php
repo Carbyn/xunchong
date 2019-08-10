@@ -2,9 +2,10 @@
 namespace Explorer;
 class JD {
 
+    const ITEM_URL = 'https://item.m.jd.com/product/%s.html';
     const PROMO_URL = 'https://wq.jd.com/commodity/promo/get?skuid=%s';
     const SFP_URL = 'https://p.3.cn/prices/mgets?&skuIds=J_%s&ext=11100000';
-    const COUPON_URL = 'https://wq.jd.com/bases/couponsoa/avlCoupon?&cid=%d&popId=8888&sku=%s&platform=4';
+    const COUPON_URL = 'https://wq.jd.com/bases/couponsoa/avlCoupon?&cid=%d&popId=%s&sku=%s&platform=4';
     const REFERER = 'https://item.m.jd.com/product/%s.html';
 
     public static function fetchPromo($skuid, $cid = 0) {
@@ -73,7 +74,7 @@ class JD {
                         foreach($subextinfo['subRuleList'] as $l) {
                             $promo['ext'][] = [
                                 'needNum' => (int)$l['needNum'],
-                                'rebate' => (int)$l['rebate'],
+                                'rebate' => (float)$l['rebate'],
                             ];
                         }
                         $promos[\Constants::PROMO_ZHEKOU][] = $promo;
@@ -92,13 +93,12 @@ class JD {
             }
             if (isset($p['3'])) {
                 $price = json_decode($p['customtag'], true);
-                $price = (float)$price['p'];
                 // 100000745034
                 $promos[\Constants::PROMO_MIAOSHAJIA] = [
                     'starttime' => (int)$p['st'],
                     'endtime' => (int)$p['d'],
                     'ext' => [
-                        'price' => $price,
+                        'price' => (float)$price['p'],
                     ],
                 ];
             }
@@ -111,35 +111,51 @@ class JD {
             if (!empty($data[0]['sfp'])) {
                 // 28486238350
                 $promos[\Constants::PROMO_FENSIJIA] = [
-                    'sfp' => (float)$data[0]['sfp'],
+                    'starttime' => 0,
+                    'endtime' => 0,
+                    'ext' => [
+                        'price' => (float)$data[0]['sfp'],
+                    ],
                 ];
             }
             if (!empty($data[0]['tpp'])) {
                 $promos[\Constants::PROMO_PLUSJIA] = [
-                    'tpp' => (float)$data[0]['tpp'],
+                    'starttime' => 0,
+                    'endtime' => 0,
+                    'ext' => [
+                        'price' => (float)$data[0]['tpp'],
+                    ],
                 ];
             }
         }
 
-        $coupon_url = sprintf(self::COUPON_URL, $cid, $skuid);
-        $headers['Referer'] = sprintf(self::REFERER, $skuid);
-        $json = Fetcher::getWithRetry($coupon_url, $headers);
-        if ($json) {
-            $data = json_decode($json, true);
-            if ($data['ret'] == 0 && !empty($data['coupons'])) {
-                foreach($data['coupons'] as $c) {
-                    $times = explode(' - ', str_replace('.', '-', $c['timeDesc']));
-                    $starttime = strtotime($times[0]);
-                    $endtime = strtotime($times[1]) + 86400 - 1;
-                    // 598283, 7003
-                    $promos[\Constants::PROMO_COUPON][] = [
-                        'starttime' => $starttime,
-                        'endtime' => $endtime,
-                        'ext' => [
-                            'needMoney' => $c['quota'],
-                            'rewardMoney' => $c['discount'],
-                        ],
-                    ];
+        $item_url = sprintf(self::ITEM_URL, $skuid);
+        $html = Fetcher::getWithRetry($item_url);
+        if ($html) {
+            if (preg_match('/"venderID":"(\d+)"/', $html, $matches)) {
+                $popId = $matches[1];
+                $coupon_url = sprintf(self::COUPON_URL, $cid, $popId, $skuid);
+                $headers['Referer'] = sprintf(self::REFERER, $skuid);
+                // todo, {"ret":0,"msg":"","coupons":[],"sku_info":{"sku":"53181307787","useJing":"0","useDong":"0","global":"0","jdPrice":"0","limitCouponType":[],"limitCouponDesc":"不可使用京券东券"}}
+                $json = Fetcher::getWithRetry($coupon_url, $headers);
+                if ($json) {
+                    $data = json_decode($json, true);
+                    if ($data['ret'] == 0 && !empty($data['coupons'])) {
+                        foreach($data['coupons'] as $c) {
+                            $times = explode(' - ', str_replace('.', '-', $c['timeDesc']));
+                            $starttime = strtotime($times[0]);
+                            $endtime = strtotime($times[1]) + 86400 - 1;
+                            // 598283, 7003
+                            $promos[\Constants::PROMO_COUPON][] = [
+                                'starttime' => $starttime,
+                                'endtime' => $endtime,
+                                'ext' => [[
+                                    'needMoney' => $c['quota'],
+                                    'rewardMoney' => $c['discount'],
+                                ]],
+                            ];
+                        }
+                    }
                 }
             }
         }

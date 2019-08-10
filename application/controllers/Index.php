@@ -16,13 +16,13 @@ class IndexController extends \Explorer\ControllerAbstract{
         $skuid = $this->getRequest()->getQuery('skuid');
         $cid = $this->getRequest()->getQuery('cid');
         $sid = $this->getRequest()->getQuery('sid');
+        echo json_encode(\Explorer\JD::fetchPromo($skuid, $cid));
+        exit;
         echo json_encode(\Explorer\Tmall::fetchPromo($skuid, $sid));
         exit;
         $resp = \Explorer\Tbk::getFavoritesList();
         echo json_encode($resp);exit;
 
-        echo json_encode(\Explorer\JD::fetchPromo($skuid, $cid));
-        exit;
         $client = new Predis\Client();
         //$client->set('foo', 'bar');
         $value = $client->get('foo');

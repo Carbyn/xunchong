@@ -28,7 +28,7 @@ class Tmall {
             'Cookie' => ['key' => 'munb', 'val' => '1041455987'],
         ];
         $json = Fetcher::getWithRetry($promo_url, $headers);
-        // var_dump($json);
+        var_dump($json);
         if (!$json) {
             return false;
         }
@@ -44,6 +44,9 @@ class Tmall {
         }
         if (!empty($data['price']['shopProm'])) {
             foreach($data['price']['shopProm'] as $sp) {
+                if (empty($sp['period'])) {
+                    continue;
+                }
                 $dates = explode('-', $sp['period']);
                 $starttime = strtotime(str_replace('.', '-', $dates[0]));
                 $endtime = strtotime(str_replace('.', '-', $dates[1]));

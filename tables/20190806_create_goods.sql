@@ -22,10 +22,12 @@ CREATE TABLE `goods` (
     `provcity` varchar(32) NOT NULL DEFAULT '' COMMENT 'provcity',
     `union_coupon_info` varchar(512) NOT NULL DEFAULT '' COMMENT 'coupon info',
     `official_coupon_info` varchar(5120) NOT NULL DEFAULT '' COMMENT 'coupon info',
+    `score` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'sort score, based on volume and tk_rate',
     primary key (`id`),
     unique key `uniq_oid_platform` (`oid`, `platform`),
-    key `idx_cat` (`cat_id`),
-    key `idx_s_cat` (`s_cat_id`),
-    key `idx_leaf_cat` (`leaf_cat_id`),
+    key `idx_score` (`score`),
+    key `idx_cat_score` (`cat_id`, `score`),
+    key `idx_s_cat_score` (`s_cat_id`, `score`),
+    key `idx_leaf_cat_score` (`leaf_cat_id`, `score`),
     FULLTEXT KEY `ft_title` (`title`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB AUTO_INCREMENT=20190806 DEFAULT CHARSET=utf8;

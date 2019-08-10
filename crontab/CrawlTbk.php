@@ -86,6 +86,8 @@ class CrawlTbk {
             'union_coupon_info' => self::parseCoupon($item),
         ];
 
+        $data['score'] = intval(($data['volume']/100*0.5 + $data['tk_rate']*0.5) * 100);
+
         if (!empty($item['small_images'])) {
             $item['small_images'] = (array)$item['small_images'];
             if (!empty($item['small_images']['string'])) {
