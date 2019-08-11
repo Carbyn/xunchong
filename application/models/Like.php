@@ -32,6 +32,30 @@ class LikeModel extends AbstractModel {
         return $ret;
     }
 
+    public function fetchLiked($user_id, $pn, $ps) {
+        $offset = ($pn - 1) * $ps;
+        $where = compact('user_id');
+        $goods_ids = $this->db->table(self::TABLE)->where($where)
+            ->orderBy('id', 'DESC')
+            ->limit($offset, $ps)
+            ->getAll();
+        if (empty($goods_ids)) {
+            return [];
+        }
+        $gids = [];
+        foreach($goods_ids as $gid) {
+            $gids[] = $gid->goods_id;
+        }
+
+        $goodsModel = new GoodsModel();
+        $goods_list = $goodsModel->batchFetch($gids);
+        foreach($goods_list as &$goods) {
+            $goods['liked'] = 1;
+        }
+
+        return $goods_list;
+    }
+
     public function likeNum($goods_id) {
         $where = compact('goods_id');
         $count = $this->db->table(self::TABLE)->where($where)->count('id', 'count')->get();
