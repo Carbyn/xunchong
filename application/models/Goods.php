@@ -203,11 +203,16 @@ class GoodsModel extends AbstractModel {
         $promo_price = $goods['final_price'];
 
         $time = time();
-        $price_types = [Constants::PROMO_FENSIJIA, Constants::PROMO_PLUSJIA, Constants::PROMO_MIAOSHAJIA, Constants::PROMO_CUXIAOJIA];
-        foreach($price_types as $type) {
+        $price_types = [
+            Constants::PROMO_FENSIJIA => '粉丝价',
+            Constants::PROMO_PLUSJIA => 'Plus价',
+            Constants::PROMO_MIAOSHAJIA => '秒杀价',
+            Constants::PROMO_CUXIAOJIA => '促销价',
+        ];
+        foreach($price_types as $type => $text) {
             if (isset($coupon_info[$type]) && $this->inPeriod($coupon_info[$type])) {
                 if ($coupon_info[$type]['ext']['price'] < $promo_price) {
-                    $promo_price_type = $type;
+                    $promo_price_type = $text;
                     $promo_price = $coupon_info[$type]['ext']['price'];
                 }
             }
@@ -248,22 +253,22 @@ class GoodsModel extends AbstractModel {
         if ($zhekou['discount'] > 0  && $manjian['discount'] > 0) {
             if ($zhekou['discount'] > $manjian['discount']) {
                 $total_money -= $zhekou['discount'];
-                $lowest_type[Constants::PROMO_ZHEKOU] = $zhekou;
+                $lowest_type[] = $zhekou['text'];
             } else {
                 $total_money -= $manjian['discount'];
-                $lowest_type[Constants::PROMO_MANJIAN] = $manjian;
+                $lowest_type[] = $manjian['text'];
             }
         } else if ($zhekou['discount'] > 0) {
             $total_money -= $zhekou['discount'];
-            $lowest_type[Constants::PROMO_ZHEKOU] = $zhekou;
+            $lowest_type[] = $zhekou['text'];
         } else if ($manjian['discount'] > 0) {
             $total_money -= $manjian['discount'];
-            $lowest_type[Constants::PROMO_MANJIAN] = $manjian;
+            $lowest_type[] = $manjian['text'];
         }
         $coupon = $this->hasCoupon($price, $promos, $num);
         if ($coupon['discount'] > 0) {
             $total_money -= $coupon['discount'];
-            $lowest_type[Constants::PROMO_COUPON] = $coupon;
+            $lowest_type[] = $coupon['text'];
         }
 
         $lowest_price = round($total_money/$num, 2);
@@ -285,7 +290,7 @@ class GoodsModel extends AbstractModel {
                     }
                     $tmp_max = $e['needNum']*$price*(1-$e['rebate']/10);
                     $discount = max($discount, $tmp_max);
-                    $text = sprintf('满%d件，总价打%s折', $e['needNum'], $e['rebate']);
+                    $text = sprintf('%d件%s折', $e['needNum'], $e['rebate']);
                 }
             }
         }
@@ -305,7 +310,7 @@ class GoodsModel extends AbstractModel {
                         continue;
                     }
                     $discount = max($discount, $e['rewardMoney']);
-                    $text = sprintf('满%d元，总价立减%s元', $e['needMoney'], $e['rewardMoney']);
+                    $text = sprintf('满%d减%s', $e['needMoney'], $e['rewardMoney']);
                 }
             }
         }
@@ -325,7 +330,7 @@ class GoodsModel extends AbstractModel {
                         continue;
                     }
                     $discount = max($discount, $e['rewardMoney']);
-                    $text = sprintf('满%d元，领券优惠%s元', $e['needMoney'], $e['rewardMoney']);
+                    $text = sprintf('%d减%s券', $e['needMoney'], $e['rewardMoney']);
                 }
             }
         }
