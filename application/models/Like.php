@@ -36,9 +36,7 @@ class LikeModel extends AbstractModel {
         $offset = ($pn - 1) * $ps;
         $where = compact('user_id');
         $goods_ids = $this->db->table(self::TABLE)->where($where)
-            ->orderBy('id', 'DESC')
-            ->limit($offset, $ps)
-            ->getAll();
+            ->orderBy('id', 'DESC')->limit($offset, $ps)->getAll();
         if (empty($goods_ids)) {
             return [];
         }

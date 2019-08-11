@@ -14,10 +14,16 @@ class GoodsModel extends AbstractModel {
         return $this->format($goods);
     }
 
-    public function fetch($id) {
+    public function fetch($id, $uid = 0) {
         $where['id'] = $id;
         $goods = $this->db->table(self::TABLE)->where($where)->get();
-        return $this->format($goods);
+        $goods = $this->format($goods);
+        $goods['liked'] = 0;
+        if ($uid) {
+            $likeModel = new LikeModel();
+            $goods['liked'] = $likeModel->liked($uid, $id);
+        }
+        return $goods;
     }
 
     public function batchFetch($ids) {
@@ -50,7 +56,7 @@ class GoodsModel extends AbstractModel {
         return $goods_list;
     }
 
-    public function fetchAll($level, $cid, $query, $pn, $ps) {
+    public function fetchAll($level, $cid, $query, $pn, $ps, $uid) {
         $pn = max($pn, 1);
         $offset = ($pn - 1) * $ps;
 
@@ -88,9 +94,24 @@ class GoodsModel extends AbstractModel {
         if (empty($goods_list)) {
             return [];
         }
+        $gids = [];
         foreach($goods_list as &$goods) {
             $goods = $this->format($goods);
+            $gids[] = $goods['id'];
         }
+
+        if ($uid ) {
+            $likeModel = new LikeModel();
+            $liked = $likeModel->multiLiked($uid, $gids);
+            foreach($goods_list as &$goods) {
+                if (isset($liked[$goods['id']])) {
+                    $goods['liked'] = 1;
+                } else {
+                    $goods['liked'] = 0;
+                }
+            }
+        }
+
         return $goods_list;
     }
 
