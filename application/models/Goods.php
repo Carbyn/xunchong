@@ -126,6 +126,8 @@ class GoodsModel extends AbstractModel {
         }
         $goods = (array)$goods;
         $goods['small_images'] = empty($goods['small_images']) ? [] : explode('|', $goods['small_images']);
+        $goods['reserve_price'] = round($goods['reserve_price'], 2);
+        $goods['final_price'] = round($goods['final_price'], 2);
 
         if (!empty($goods['union_coupon_info'])) {
             $goods['union_coupon_info'] = json_decode($goods['union_coupon_info'], true);
@@ -214,7 +216,7 @@ class GoodsModel extends AbstractModel {
         if (!$promo_price_type) {
             return [];
         }
-        $promo_price = sprintf('%.2f', $promo_price);
+        $promo_price = round($promo_price, 2);
 
         return compact('promo_price_type', 'promo_price');
     }
@@ -243,89 +245,91 @@ class GoodsModel extends AbstractModel {
 
         $zhekou = $this->hasZhekou($price, $promos, $num);
         $manjian = $this->hasManjian($price, $promos, $num);
-        if ($zhekou && $manjian) {
-            if ($zhekou > $manjian) {
-                $total_money -= $zhekou;
-                $lowest_type[] = Constants::PROMO_ZHEKOU;
+        if ($zhekou['discount'] > 0  && $manjian['discount'] > 0) {
+            if ($zhekou['discount'] > $manjian['discount']) {
+                $total_money -= $zhekou['discount'];
+                $lowest_type[Constants::PROMO_ZHEKOU] = $zhekou;
             } else {
-                $total_money -= $manjian;
-                $lowest_type[] = Constants::PROMO_MANJIAN;
+                $total_money -= $manjian['discount'];
+                $lowest_type[Constants::PROMO_MANJIAN] = $manjian;
             }
-        } else if ($zhekou) {
-            $total_money -= $zhekou;
-            $lowest_type[] = Constants::PROMO_ZHEKOU;
-        } else if ($manjian) {
-            $total_money -= $manjian;
-            $lowest_type[] = Constants::PROMO_MANJIAN;
+        } else if ($zhekou['discount'] > 0) {
+            $total_money -= $zhekou['discount'];
+            $lowest_type[Constants::PROMO_ZHEKOU] = $zhekou;
+        } else if ($manjian['discount'] > 0) {
+            $total_money -= $manjian['discount'];
+            $lowest_type[Constants::PROMO_MANJIAN] = $manjian;
         }
         $coupon = $this->hasCoupon($price, $promos, $num);
-        if ($coupon) {
-            $total_money -= $coupon;
-            $lowest_type[] = Constants::PROMO_COUPON;
+        if ($coupon['discount'] > 0) {
+            $total_money -= $coupon['discount'];
+            $lowest_type[Constants::PROMO_COUPON] = $coupon;
         }
 
-        $lowest_price = sprintf('%.2f', $total_money/$num);
+        $lowest_price = round($total_money/$num, 2);
 
         return compact('lowest_price', 'lowest_type');
     }
 
     private function hasZhekou($price, $promos, $num) {
-        if (!isset($promos[Constants::PROMO_ZHEKOU])) {
-            return 0;
-        }
-        $max = 0;
-        foreach($promos[Constants::PROMO_ZHEKOU] as $p) {
-            if (!$this->inPeriod($p)) {
-                continue;
-            }
-            foreach($p['ext'] as $e) {
-                if ($num != $e['needNum']) {
+        $discount = 0;
+        $text = '';
+        if (isset($promos[Constants::PROMO_ZHEKOU])) {
+            foreach($promos[Constants::PROMO_ZHEKOU] as $p) {
+                if (!$this->inPeriod($p)) {
                     continue;
                 }
-                $tmp_max = $e['needNum']*$price*(1-$e['rebate']/10);
-                $max = max($max, $tmp_max);
+                foreach($p['ext'] as $e) {
+                    if ($num != $e['needNum']) {
+                        continue;
+                    }
+                    $tmp_max = $e['needNum']*$price*(1-$e['rebate']/10);
+                    $discount = max($discount, $tmp_max);
+                    $text = sprintf('满%d件，总价打%s折', $e['needNum'], $e['rebate']);
+                }
             }
         }
-        return $max;
+        return compact('discount', 'text');
     }
 
     private function hasManjian($price, $promos, $num) {
-        if (!isset($promos[Constants::PROMO_MANJIAN])) {
-            return 0;
-        }
-
-        $max = 0;
-        foreach($promos[Constants::PROMO_MANJIAN] as $p) {
-            if (!$this->inPeriod($p)) {
-                continue;
-            }
-            foreach($p['ext'] as $e) {
-                if ($price*$num < $e['needMoney']) {
+        $discount = 0;
+        $text = '';
+        if (isset($promos[Constants::PROMO_MANJIAN])) {
+            foreach($promos[Constants::PROMO_MANJIAN] as $p) {
+                if (!$this->inPeriod($p)) {
                     continue;
                 }
-                $max = max($max, $e['rewardMoney']);
+                foreach($p['ext'] as $e) {
+                    if ($price*$num < $e['needMoney']) {
+                        continue;
+                    }
+                    $discount = max($discount, $e['rewardMoney']);
+                    $text = sprintf('满%d元，总价立减%s元', $e['needMoney'], $e['rewardMoney']);
+                }
             }
         }
-        return $max;
+        return compact('discount', 'text');
     }
 
     private function hasCoupon($price, $promos, $num) {
-        if (!isset($promos[Constants::PROMO_COUPON])) {
-            return 0;
-        }
-        $max = 0;
-        foreach($promos[Constants::PROMO_COUPON] as $p) {
-            if (!$this->inPeriod($p)) {
-                continue;
-            }
-            foreach($p['ext'] as $e) {
-                if ($price*$num < $e['needMoney']) {
+        $discount = 0;
+        $text = '';
+        if (isset($promos[Constants::PROMO_COUPON])) {
+            foreach($promos[Constants::PROMO_COUPON] as $p) {
+                if (!$this->inPeriod($p)) {
                     continue;
                 }
-                $max = max($max, $e['rewardMoney']);
+                foreach($p['ext'] as $e) {
+                    if ($price*$num < $e['needMoney']) {
+                        continue;
+                    }
+                    $discount = max($discount, $e['rewardMoney']);
+                    $text = sprintf('满%d元，领券优惠%s元', $e['needMoney'], $e['rewardMoney']);
+                }
             }
         }
-        return $max;
+        return compact('discount', 'text');
     }
 
     private function inPeriod($promo) {
