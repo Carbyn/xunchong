@@ -52,6 +52,7 @@ class CrawlTbk {
                         self::saveGoods($item);
                         echo "{$item['num_iid']} saved\n";
                     }
+                    sleep(1);
                 }
                 echo "{$fav->favorites_title} end\n";
             }

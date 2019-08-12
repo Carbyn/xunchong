@@ -45,10 +45,10 @@ class ImportCategory {
         ['cid' => 1000300, 'pcid' => 10003, 'name' => '美毛化毛', 'icon' => '/static/category/mao/meimaohuamao.jpg'],
         ['cid' => 1000301, 'pcid' => 10003, 'name' => '补钙健骨', 'icon' => '/static/category/mao/bugaijiangu.jpg'],
         ['cid' => 1000302, 'pcid' => 10003, 'name' => '肠胃调理', 'icon' => '/static/category/mao/changweitiaoli.jpg'],
-        ['cid' => 1000302, 'pcid' => 10003, 'name' => '综合营养', 'icon' => '/static/category/mao/zongheyingyang.jpg'],
+        ['cid' => 1000303, 'pcid' => 10003, 'name' => '综合营养', 'icon' => '/static/category/mao/zongheyingyang.jpg'],
 
         ['cid' => 1000400, 'pcid' => 10004, 'name' => '出行用品', 'icon' => '/static/category/mao/chuxingyongpin.jpg'],
-        ['cid' => 1000401, 'pcid' => 10004, 'name' => '猫咪玩具', 'icon' => '/static/category/mao/maomiwanju.jpg'],
+        ['cid' => 1000401, 'pcid' => 10004, 'name' => '猫咪餐具', 'icon' => '/static/category/mao/maomicanju.jpg'],
         ['cid' => 1000402, 'pcid' => 10004, 'name' => '猫咪住所', 'icon' => '/static/category/mao/maomizhusuo.jpg'],
         ['cid' => 1000403, 'pcid' => 10004, 'name' => '训练用品', 'icon' => '/static/category/mao/xunlianyongpin.jpg'],
         ['cid' => 1000404, 'pcid' => 10004, 'name' => '服装饰品', 'icon' => '/static/category/mao/fuzhuangshipin.jpg'],
@@ -61,6 +61,7 @@ class ImportCategory {
         ['cid' => 1000601, 'pcid' => 10006, 'name' => '疏剪工具', 'icon' => '/static/category/mao/shujiangongju.jpg'],
         ['cid' => 1000602, 'pcid' => 10006, 'name' => '洗澡用品', 'icon' => '/static/category/mao/xizaoyongpin.jpg'],
 
+        // todo
         ['cid' => 1000700, 'pcid' => 10007, 'name' => '膨润土猫砂', 'icon' => '/static/category/mao/pengruntumaosha.jpg'],
         ['cid' => 1000701, 'pcid' => 10007, 'name' => '水晶猫砂', 'icon' => '/static/category/mao/shuijingmaosha.jpg'],
         ['cid' => 1000702, 'pcid' => 10007, 'name' => '松木猫砂', 'icon' => '/static/category/mao/songmumaosha.jpg'],
@@ -96,16 +97,16 @@ class ImportCategory {
         ['cid' => 2000403, 'pcid' => 20004, 'name' => '服装饰品', 'icon' => '/static/category/gou/fuzhuangshipin.jpg'],
         ['cid' => 2000404, 'pcid' => 20004, 'name' => '训练用品', 'icon' => '/static/category/gou/xunlianyongpin.jpg'],
 
-        ['cid' => 2000500, 'pcid' => 20005, 'name' => '互动玩具', 'icon' => '/static/category/gou/hudongwanju.jpg'],
-        ['cid' => 2000501, 'pcid' => 20005, 'name' => '磨牙玩具', 'icon' => '/static/category/gou/moyawanju.jpg'],
-        ['cid' => 2000502, 'pcid' => 20005, 'name' => '益智玩具', 'icon' => '/static/category/gou/yizhiwanju.jpg'],
-        ['cid' => 2000503, 'pcid' => 20005, 'name' => '训练玩具', 'icon' => '/static/category/gou/xunlianwanju.jpg'],
-        ['cid' => 2000504, 'pcid' => 20005, 'name' => '漏食玩具', 'icon' => '/static/category/gou/loushiwanju.jpg'],
-        ['cid' => 2000505, 'pcid' => 20005, 'name' => '毛绒玩具', 'icon' => '/static/category/gou/maorongwanju.jpg'],
+        ['cid' => 2000500, 'pcid' => 20005, 'name' => '洗护香波', 'icon' => '/static/category/gou/xihuxiangbo.jpg'],
+        ['cid' => 2000501, 'pcid' => 20005, 'name' => '疏剪工具', 'icon' => '/static/category/gou/shujiangongju.jpg'],
+        ['cid' => 2000502, 'pcid' => 20005, 'name' => '洗澡用品', 'icon' => '/static/category/gou/xizaoyongpin.jpg'],
 
-        ['cid' => 2000600, 'pcid' => 20006, 'name' => '洗护香波', 'icon' => '/static/category/gou/xihuxiangbo.jpg'],
-        ['cid' => 2000601, 'pcid' => 20006, 'name' => '疏剪工具', 'icon' => '/static/category/gou/shujiangongju.jpg'],
-        ['cid' => 2000602, 'pcid' => 20006, 'name' => '洗澡用品', 'icon' => '/static/category/gou/xizaoyongpin.jpg'],
+        ['cid' => 2000600, 'pcid' => 20006, 'name' => '互动玩具', 'icon' => '/static/category/gou/hudongwanju.jpg'],
+        ['cid' => 2000601, 'pcid' => 20006, 'name' => '磨牙玩具', 'icon' => '/static/category/gou/moyawanju.jpg'],
+        ['cid' => 2000602, 'pcid' => 20006, 'name' => '益智玩具', 'icon' => '/static/category/gou/yizhiwanju.jpg'],
+        ['cid' => 2000603, 'pcid' => 20006, 'name' => '训练玩具', 'icon' => '/static/category/gou/xunlianwanju.jpg'],
+        ['cid' => 2000604, 'pcid' => 20006, 'name' => '漏食玩具', 'icon' => '/static/category/gou/loushiwanju.jpg'],
+        ['cid' => 2000605, 'pcid' => 20006, 'name' => '毛绒玩具', 'icon' => '/static/category/gou/maorongwanju.jpg'],
 
         ['cid' => 2000700, 'pcid' => 20007, 'name' => '航空箱包', 'icon' => '/static/category/gou/hangkongxiangbao.jpg'],
         ['cid' => 2000701, 'pcid' => 20007, 'name' => '牵引系列', 'icon' => '/static/category/gou/qianyinxilie.jpg'],
