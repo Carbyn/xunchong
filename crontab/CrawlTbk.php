@@ -44,8 +44,8 @@ class CrawlTbk {
                             }
                             $item[$url.'_tpwd'] = $tpwd['data']->model;
                         }
-                        if (empty($item['click_url'])) {
-                            echo "item click_url empty: {$item['num_iid']}\n";
+                        if (empty($item['click_url']) || empty($item['pict_url'])) {
+                            echo "item click_url or pict_url empty: {$item['num_iid']}\n";
                             continue;
                         }
                         $item['categories'] = $categories;
