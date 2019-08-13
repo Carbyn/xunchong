@@ -7,3 +7,4 @@ static
 .DS_Store
 vendor*
 nano.*
+crontab/jd/*.csv

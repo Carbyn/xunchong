@@ -173,6 +173,9 @@ class GoodsModel extends AbstractModel {
         $goods['lowest_type'] = array_merge($goods['lowest_type'], $lowest_type);
         $goods['lowest_num'] = $lowest_num;
 
+        // todo
+        // $goods['lowest_type'] = [];
+
         return $goods;
     }
 

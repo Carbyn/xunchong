@@ -42,7 +42,7 @@ class Constants {
     const ERR_GOODS_PARAM_INVALID = 1601;
 
     const GOODS_PLATFORM_TBK = 1;
-    const GOODS_PLATFORM_JD  = 2;
+    const GOODS_PLATFORM_JDK  = 2;
 
     const PROMO_MANJIAN = 'manjian';
     const PROMO_ZHEKOU  = 'zhekou';

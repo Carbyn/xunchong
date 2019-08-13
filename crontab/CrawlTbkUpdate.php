@@ -29,6 +29,7 @@ class CrawlTbkUpdate {
                         'final_price' => $item->zk_final_price,
                         'volume' => $item->volume,
                     ];
+                    $update['score'] = intval(($update['volume']/100*0.5 + $goods['tk_rate']*0.5)*100);
                 }
                 usleep(100000);
                 $goodsModel->update($goods['id'], $update);

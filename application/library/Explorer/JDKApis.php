@@ -9,4 +9,10 @@ class JDKApis {
         $req->setGrade($grade);
         return JDK::getTopClient()->execute($req);
     }
+
+    public static function getGoodsInfo($skuid) {
+        $req = new \GoodsInfoQueryRequest();
+        $req->setSkuIds($skuid);
+        return JDK::getTopClient()->execute($req);
+    }
 }
