@@ -146,7 +146,7 @@ class GoodsModel extends AbstractModel {
         $goods['lowest_num'] = 1;
 
         if ($this->hasPromoZeng($goods)) {
-            $goods['lowest_price'][] = '赠';
+            $goods['lowest_type'][] = '赠';
         }
 
         $promo_prices = $this->hasPromoPrice($goods);

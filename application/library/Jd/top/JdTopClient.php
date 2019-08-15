@@ -209,7 +209,8 @@ class JdTopClient
 		$this->appkey,
 		$localIp,
 		PHP_OS,
-		$this->sdkVersion,
+		//$this->sdkVersion,
+        '1.0',
 		$requestUrl,
 		$errorCode,
 		str_replace("\n","",$responseTxt)

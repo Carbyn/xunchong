@@ -149,8 +149,13 @@ class JD {
                 }
                 foreach($data['coupons'] as $c) {
                     $times = explode(' - ', str_replace('.', '-', $c['timeDesc']));
-                    $starttime = strtotime($times[0]);
-                    $endtime = strtotime($times[1]) + 86400 - 1;
+                    if (count($times) == 2) {
+                        $starttime = strtotime($times[0]);
+                        $endtime = strtotime($times[1]) + 86400 - 1;
+                    } else {
+                        $starttime = 0;
+                        $endtime = 0;
+                    }
                     // 598283, 7003
                     $promos[\Constants::PROMO_COUPON][] = [
                         'starttime' => $starttime,
