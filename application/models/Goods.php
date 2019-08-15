@@ -134,6 +134,9 @@ class GoodsModel extends AbstractModel {
         $goods['small_images'] = empty($goods['small_images']) ? [] : explode('|', $goods['small_images']);
         $goods['reserve_price'] = round($goods['reserve_price'], 2);
         $goods['final_price'] = round($goods['final_price'], 2);
+        if ($goods['platform'] == Constants::GOODS_PLATFORM_JDK) {
+            $goods['reserve_price'] = $goods['final_price'];
+        }
 
         if (!empty($goods['union_coupon_info'])) {
             $goods['union_coupon_info'] = json_decode($goods['union_coupon_info'], true);

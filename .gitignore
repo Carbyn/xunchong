@@ -8,3 +8,4 @@ static
 vendor*
 nano.*
 crontab/jd/*.csv
+crontab/jd/*.zip
