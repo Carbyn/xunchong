@@ -14,6 +14,12 @@ class GoodsModel extends AbstractModel {
         return $this->format($goods);
     }
 
+	public function existsByGoodsID($id) {
+		$where['id'] = $id;
+		$goods = $this->db->table(self::TABLE)->where($where)->get();
+		return !empty($goods);
+	}
+
     public function fetch($id, $uid = 0) {
         $where['id'] = $id;
         $goods = $this->db->table(self::TABLE)->where($where)->get();

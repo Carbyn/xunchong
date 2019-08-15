@@ -3,7 +3,7 @@ class ReportController extends \Explorer\ControllerAbstract {
 
     public function submitAction() {
         $goodsId = (string)$this->getRequest()->getQuery('goods_id', '');
-        $itemId  = (string)$this->getRequest()->getQuery('item_id', '');
+        $itemId  = (string)$this->getRequest()->getQuery('item_id', '000');
         list($errno, $errmsg) = $this->reqValidation($goodsId, $itemId);
         if (0 !== $errno) {
             return $this->outputError($errno, $errmsg);
@@ -39,7 +39,7 @@ class ReportController extends \Explorer\ControllerAbstract {
             return array($errno, 'item_id为空or不合法');
         }
         $goodsModel = new GoodsModel();
-        if (!$goodsModel->exists($goodsId, $platform=1)) {
+        if (!$goodsModel->existsByGoodsID($goodsId)) {
             return array($errno, 'goods not exists');
         }
         return array(0, '');
@@ -47,6 +47,7 @@ class ReportController extends \Explorer\ControllerAbstract {
 
     private function isItemidValid($itemId) {
         $items = [
+            '000' => 'default',
             '001' => '虚假信息',
             '002' => '失效信息',
         ];
