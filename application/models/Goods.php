@@ -77,7 +77,7 @@ class GoodsModel extends AbstractModel {
         }
 
         if ($query) {
-            $sql = 'select * from '.self::TABLE." where match(title) against(?)";
+            $sql = 'select * from '.self::TABLE." where match(title) against(? IN BOOLEAN MODE)";
             if (!empty($where)) {
                 $whereStr = key($where).'='.current($where);
                 $sql .= ' and '.$whereStr;
@@ -141,11 +141,13 @@ class GoodsModel extends AbstractModel {
             $goods['official_coupon_info'] = [];
         }
 
-        $goods[Constants::PROMO_ZENG] = $this->hasPromoZeng($goods);
-
         $goods['lowest_type'] = [];
         $goods['lowest_price'] = $goods['final_price'];
         $goods['lowest_num'] = 1;
+
+        if ($this->hasPromoZeng($goods)) {
+            $goods['lowest_price'][] = '赠';
+        }
 
         $promo_prices = $this->hasPromoPrice($goods);
         if ($promo_prices) {
@@ -174,7 +176,15 @@ class GoodsModel extends AbstractModel {
         $goods['lowest_num'] = $lowest_num;
 
         // todo
-        // $goods['lowest_type'] = [];
+        $price_types = ['粉丝价', 'Plus价', '秒杀价', '促销价'];
+        $discount_types = [['2件8折', '50减10券'], ['满300减30', '80减20券']];
+        if (rand(0, 1)) {
+            $goods['lowest_type'][] = '赠';
+        }
+        $goods['lowest_type'][] = $price_types[array_rand($price_types)];
+        $goods['lowest_type'] += $discount_types[array_rand($discount_types)];
+
+        sort($goods['lowest_type']);
 
         return $goods;
     }
