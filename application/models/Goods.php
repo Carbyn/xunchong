@@ -93,6 +93,8 @@ class GoodsModel extends AbstractModel {
         } else {
             $goods_list = $this->db->table(self::TABLE);
             $where['status'] = 0;
+            // todo
+            $where['platform'] = Constants::GOODS_PLATFORM_JDK;
             $goods_list = $goods_list->where($where);
             $goods_list = $goods_list->orderBy('score', 'DESC')->limit($offset, $ps)->getAll();
         }
@@ -183,15 +185,6 @@ class GoodsModel extends AbstractModel {
         $goods['lowest_price'] = $lowest_price;
         $goods['lowest_type'] = array_merge($goods['lowest_type'], $lowest_type);
         $goods['lowest_num'] = $lowest_num;
-
-        // todo
-        $price_types = ['粉丝价', 'Plus价', '秒杀价', '促销价'];
-        $discount_types = [['2件8折', '50减10券'], ['满300减30', '80减20券']];
-        if (rand(0, 1)) {
-            $goods['lowest_type'][] = '赠';
-        }
-        $goods['lowest_type'][] = $price_types[array_rand($price_types)];
-        $goods['lowest_type'] += $discount_types[array_rand($discount_types)];
 
         sort($goods['lowest_type']);
 

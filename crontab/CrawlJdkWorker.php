@@ -20,7 +20,7 @@ class CrawlJdkWorker {
             echo "$filename empty\n";
             return;
         }
-        $rows = iconv('gb2312', 'utf8', $rows);
+        $rows = iconv('gbk', 'utf8', $rows);
         $rows = explode("\n", $rows);
         $i = 0;
         foreach($rows as $row) {

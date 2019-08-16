@@ -16,7 +16,15 @@ class GoodsController extends \Explorer\ControllerAbstract {
         }
 
         $goodsModel = new GoodsModel();
-        $goods_list = $goodsModel->fetchAll($level, $cid, $query, $pn, $ps, $this->userId);
+        if (!$level && !$cid && !$query) {
+            $goods_list_cats = $goodsModel->fetchAll(1, 100, $query, $pn, $ps / 2, $this->userId);
+            $goods_list_dogs = $goodsModel->fetchAll(1, 200, $query, $pn, $ps / 2, $this->userId);
+            $goods_list = array_merge($goods_list_cats, $goods_list_dogs);
+            shuffle($goods_list);
+        } else {
+            $goods_list = $goodsModel->fetchAll($level, $cid, $query, $pn, $ps, $this->userId);
+        }
+
         $is_end = count($goods_list) < $ps;
         $this->outputSuccess(compact('goods_list', 'is_end'));
     }
