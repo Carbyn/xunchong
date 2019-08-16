@@ -93,8 +93,6 @@ class GoodsModel extends AbstractModel {
         } else {
             $goods_list = $this->db->table(self::TABLE);
             $where['status'] = 0;
-            // todo
-            $where['platform'] = Constants::GOODS_PLATFORM_JDK;
             $goods_list = $goods_list->where($where);
             $goods_list = $goods_list->orderBy('score', 'DESC')->limit($offset, $ps)->getAll();
         }
@@ -187,6 +185,13 @@ class GoodsModel extends AbstractModel {
         $goods['lowest_num'] = $lowest_num;
 
         sort($goods['lowest_type']);
+
+        if ($goods['click_url_tpwd']) {
+            $goods['click_url_tpwd'] = "{$goods['title']}\n💰原价{$goods['reserve_price']}，💰优惠后{$goods['lowest_price']}\n{$goods['click_url_tpwd']} 打开淘宝立即抢购~";
+        }
+        if ($goods['coupon_click_url_tpwd']) {
+            $goods['coupon_click_url_tpwd'] = "{$goods['title']}\n💰原价{$goods['reserve_price']}，💰优惠后{$goods['lowest_price']}\n{$goods['coupon_click_url_tpwd']} 打开淘宝立即抢购~";
+        }
 
         return $goods;
     }
