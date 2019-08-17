@@ -18,7 +18,7 @@ class CrawlJdkPromo {
             foreach($goods_list as $goods) {
                 $update = [];
 
-                $promos = \Explorer\JD::fetchPromo($goods['oid'], $goods['leaf_cat_id']);
+                $promos = \Explorer\JD::fetchPromo($goods['oid'], $goods['ocid']);
                 sleep(1);
                 if (empty($promos)) {
                     echo "fetchPromo:{$goods['id']} failed\n";

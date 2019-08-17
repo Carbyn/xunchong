@@ -186,11 +186,16 @@ class GoodsModel extends AbstractModel {
 
         sort($goods['lowest_type']);
 
-        if ($goods['click_url_tpwd']) {
-            $goods['click_url_tpwd'] = "{$goods['title']}\n💰原价{$goods['reserve_price']}，💰优惠后{$goods['lowest_price']}\n{$goods['click_url_tpwd']} 打开淘宝立即抢购~";
-        }
-        if ($goods['coupon_click_url_tpwd']) {
-            $goods['coupon_click_url_tpwd'] = "{$goods['title']}\n💰原价{$goods['reserve_price']}，💰优惠后{$goods['lowest_price']}\n{$goods['coupon_click_url_tpwd']} 打开淘宝立即抢购~";
+        if ($goods['platform'] == Constants::GOODS_PLATFORM_TBK) {
+            if ($goods['click_url_tpwd']) {
+                $goods['click_url_tpwd'] = "{$goods['title']}\n💰原价{$goods['reserve_price']}，💰优惠后{$goods['lowest_price']}\n{$goods['click_url_tpwd']} 打开淘宝立即抢购~";
+            }
+            if ($goods['coupon_click_url_tpwd']) {
+                $goods['coupon_click_url_tpwd'] = "{$goods['title']}\n💰原价{$goods['reserve_price']}，💰优惠后{$goods['lowest_price']}\n{$goods['coupon_click_url_tpwd']} 打开淘宝立即抢购~";
+            }
+        } else {
+            $goods['coupon_click_url_tpwd'] = $goods['coupon_click_url'];
+            $goods['click_url_tpwd'] = $goods['click_url'];
         }
 
         return $goods;

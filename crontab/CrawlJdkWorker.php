@@ -75,6 +75,7 @@ class CrawlJdkWorker {
 
         $data = [
             'oid' => (string)$item['skuId'],
+            'ocid' => (int)$item['cid3'],
             'platform' => \Constants::GOODS_PLATFORM_JDK,
             'title' => $item['goodsName'],
             'cat_id' => $item['categories'][0]->cid,

@@ -47,11 +47,18 @@ class LikeModel extends AbstractModel {
 
         $goodsModel = new GoodsModel();
         $goods_list = $goodsModel->batchFetch($gids);
-        foreach($goods_list as &$goods) {
-            $goods['liked'] = 1;
+        $data = [];
+        foreach($goods_ids as $gid) {
+            foreach($goods_list as $goods) {
+                if ($goods['id'] == $gid->goods_id) {
+                    $goods['liked'] = 1;
+                    $data[] = $goods;
+                    break;
+                }
+            }
         }
 
-        return $goods_list;
+        return $data;
     }
 
     public function likeNum($goods_id) {

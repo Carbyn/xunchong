@@ -1,6 +1,7 @@
 CREATE TABLE `goods` (
     `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'primary key',
     `oid` varchar(32) NOT NULL DEFAULT '' COMMENT 'original id',
+    `ocid` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'original cat id',
     `platform` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '1: tbk, 2: jd',
     `title` varchar(128) NOT NULL DEFAULT '' COMMENT 'title',
     `cat_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'cat id',

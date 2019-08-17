@@ -83,10 +83,9 @@ class ImportCategory {
 
         ['cid' => 2000500, 'pcid' => 20005, 'name' => '互动玩具', 'icon' => '/static/category/gou/hudongwanju.jpg'],
         ['cid' => 2000501, 'pcid' => 20005, 'name' => '磨牙玩具', 'icon' => '/static/category/gou/moyawanju.jpg'],
-        ['cid' => 2000502, 'pcid' => 20005, 'name' => '益智玩具', 'icon' => '/static/category/gou/yizhiwanju.jpg'],
-        ['cid' => 2000503, 'pcid' => 20005, 'name' => '训练玩具', 'icon' => '/static/category/gou/xunlianwanju.jpg'],
-        ['cid' => 2000504, 'pcid' => 20005, 'name' => '漏食玩具', 'icon' => '/static/category/gou/loushiwanju.jpg'],
-        ['cid' => 2000505, 'pcid' => 20005, 'name' => '毛绒玩具', 'icon' => '/static/category/gou/maorongwanju.jpg'],
+        ['cid' => 2000502, 'pcid' => 20005, 'name' => '训练玩具', 'icon' => '/static/category/gou/xunlianwanju.jpg'],
+        ['cid' => 2000503, 'pcid' => 20005, 'name' => '漏食玩具', 'icon' => '/static/category/gou/loushiwanju.jpg'],
+        ['cid' => 2000504, 'pcid' => 20005, 'name' => '毛绒玩具', 'icon' => '/static/category/gou/maorongwanju.jpg'],
 
         ['cid' => 2000600, 'pcid' => 20006, 'name' => '航空箱包', 'icon' => '/static/category/gou/hangkongxiangbao.jpg'],
         ['cid' => 2000601, 'pcid' => 20006, 'name' => '牵引系列', 'icon' => '/static/category/gou/qianyinxilie.jpg'],
