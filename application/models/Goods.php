@@ -83,12 +83,12 @@ class GoodsModel extends AbstractModel {
         }
 
         if ($query) {
-            $sql = 'select * from '.self::TABLE." where match(title) against(? IN BOOLEAN MODE)";
+            $sql = 'select * from '.self::TABLE." where match(title) against(? IN NATUAL LANGUAGE MODE)";
             if (!empty($where)) {
                 $whereStr = key($where).'='.current($where);
                 $sql .= ' and '.$whereStr;
             }
-            $sql .= " and status = 0 order by score desc limit $offset, $ps";
+            $sql .= " and status = 0 limit $offset, $ps";
             $goods_list = $this->db->query($sql, [$query]);
         } else {
             $goods_list = $this->db->table(self::TABLE);
