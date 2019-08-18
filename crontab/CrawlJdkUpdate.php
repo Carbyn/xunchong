@@ -32,7 +32,7 @@ class CrawlJdkUpdate {
                     $update = [
                         'final_price' => (float)$item['wlUnitPrice'],
                         'volume' => (int)$item['inOrderCount'],
-                        'ocid' => (int)$item['cids'],
+                        'ocid' => (int)$item['cid3'],
                     ];
                     $update['score'] = intval(($update['volume']/100*0.5 + $goods['tk_rate']*0.5)*100);
                 }
