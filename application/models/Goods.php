@@ -83,7 +83,7 @@ class GoodsModel extends AbstractModel {
         }
 
         if ($query) {
-            $sql = 'select * from '.self::TABLE." where match(title) against(? IN BOOLEAN MODE)";
+            $sql = 'select * from '.self::TABLE." where match(title) against(? IN NATURAL LANGUAGE MODE)";
             if (!empty($where)) {
                 $whereStr = key($where).'='.current($where);
                 $sql .= ' and '.$whereStr;
