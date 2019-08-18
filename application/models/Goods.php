@@ -88,7 +88,7 @@ class GoodsModel extends AbstractModel {
                 $whereStr = key($where).'='.current($where);
                 $sql .= ' and '.$whereStr;
             }
-            $sql .= " and status = 0 limit $offset, $ps";
+            $sql .= " status = 0 limit $offset, $ps";
             $goods_list = $this->db->query($sql, [$query]);
         } else {
             $goods_list = $this->db->table(self::TABLE);
