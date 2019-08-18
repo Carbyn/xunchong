@@ -5,6 +5,7 @@ class GoodsController extends \Explorer\ControllerAbstract {
         $level = $this->getRequest()->getQuery('level', 0);
         $cid = $this->getRequest()->getQuery('cid', 0);
         $query = $this->getRequest()->getQuery('query', '');
+        $query = str_replace(' ', '', $query);
         $pn = (int)$this->getRequest()->getQuery('pn', 1);
         $ps = 10;
 
