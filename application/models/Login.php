@@ -39,11 +39,11 @@ class LoginModel extends AbstractModel {
     }
 
     private function getCodeKey($mobile) {
-        return md5('login_code_'.$mobile);
+        return md5(\Constants::env().'_login_code_'.$mobile);
     }
 
-    private function getTokenKey($id) {
-        return md5('login_token_'.$id);
+    private function getTokenKey($token) {
+        return md5(\Constants::env().'_login_token_'.$token);
     }
 
 }
