@@ -65,7 +65,7 @@ class Fetcher {
                     }
                 }
             }
-            $curl->get($url);
+            $curl->post($url, $data);
             if (!$curl->error) {
                 return $curl->response;
             }
