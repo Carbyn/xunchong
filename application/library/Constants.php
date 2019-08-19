@@ -44,6 +44,8 @@ class Constants {
     const GOODS_PLATFORM_TBK = 1;
     const GOODS_PLATFORM_JDK  = 2;
 
+    const GOODS_QUERY_MIN = 10;
+
     const PROMO_MANJIAN = 'manjian';
     const PROMO_ZHEKOU  = 'zhekou';
     const PROMO_FENSIJIA = 'fensijia';

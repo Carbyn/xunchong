@@ -2,9 +2,9 @@
 class GoodsController extends \Explorer\ControllerAbstract {
 
     public function listAction() {
-        $level = $this->getRequest()->getQuery('level', 0);
-        $cid = $this->getRequest()->getQuery('cid', 0);
-        $query = $this->getRequest()->getQuery('query', '');
+        $level = (int)$this->getRequest()->getQuery('level', 0);
+        $cid = (int)$this->getRequest()->getQuery('cid', 0);
+        $query = mb_substr($this->getRequest()->getQuery('query', ''), 0, 100);
         $pn = (int)$this->getRequest()->getQuery('pn', 1);
         $ps = 10;
 
@@ -25,6 +25,10 @@ class GoodsController extends \Explorer\ControllerAbstract {
             $goods_list = $goodsModel->fetchAll($level, $cid, $query, $pn, $ps, $this->userId);
         }
 
+        if ($pn == 1 && $query) {
+            $this->afterQuery($query, $cid, count($goods_list));
+        }
+
         $is_end = count($goods_list) < $ps;
         $this->outputSuccess(compact('goods_list', 'is_end'));
     }
@@ -40,6 +44,16 @@ class GoodsController extends \Explorer\ControllerAbstract {
             return $this->outputError(Constants::ERR_GOODS_PARAM_INVALID, '商品不存在');
         }
         $this->outputSuccess(compact('goods'));
+    }
+
+    private function afterQuery($query, $cid, $count) {
+        $is_lacked = (int)($count < \Constants::GOODS_QUERY_MIN);
+        $queryModel = new QueryModel();
+        if ($queryModel->exists($query, $cid)) {
+            $queryModel->update($query, $cid, $is_lacked);
+        } else {
+            $queryModel->create($query, $cid, $is_lacked, 1);
+        }
     }
 
 }
