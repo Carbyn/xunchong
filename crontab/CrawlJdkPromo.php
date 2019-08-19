@@ -19,7 +19,6 @@ class CrawlJdkPromo {
                 $update = [];
 
                 $promos = \Explorer\JD::fetchPromo($goods['oid'], $goods['ocid']);
-                sleep(1);
                 if (empty($promos)) {
                     echo "fetchPromo:{$goods['id']} failed\n";
                     continue;
@@ -29,6 +28,7 @@ class CrawlJdkPromo {
                 echo "{$goods['id']} updated\n";
             }
             $pn++;
+            sleep(1);
         }
         echo "done\n";
     }
