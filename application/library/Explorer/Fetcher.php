@@ -6,7 +6,7 @@ class Fetcher {
         $curl = new \Curl\Curl();
         $curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
         $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
-        $curl->setOpt(CURLOPT_SSLVERSION, 3);
+        // $curl->setOpt(CURLOPT_SSLVERSION, 3);
         while ($retry > 0) {
             if (!empty($headers)) {
                 foreach($headers as $key => $val) {
@@ -42,7 +42,7 @@ class Fetcher {
         $curl = new \Curl\Curl();
         $curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
         $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
-        $curl->setOpt(CURLOPT_SSLVERSION, 3);
+        // $curl->setOpt(CURLOPT_SSLVERSION, 3);
         while ($retry > 0) {
             if (!empty($headers)) {
                 foreach($headers as $key => $val) {
