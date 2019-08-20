@@ -1,7 +1,7 @@
 <?php
 class GoodsController extends \Explorer\ControllerAbstract {
 
-    const APIV_IN_REVIEW = '0.3';
+    const VER_IN_REVIEW = '0.3';
 
     public function listAction() {
         $level = (int)$this->getRequest()->getQuery('level', 0);
@@ -9,8 +9,8 @@ class GoodsController extends \Explorer\ControllerAbstract {
         $query = mb_substr($this->getRequest()->getQuery('query', ''), 0, 100);
         $pn = (int)$this->getRequest()->getQuery('pn', 1);
         $ps = 10;
-        $apiv = $this->getRequest()->getQuery('apiv');
-        $in_review = $apiv == self::APIV_IN_REVIEW;
+        $ver = $this->getRequest()->getQuery('ver');
+        $in_review = $ver == self::VER_IN_REVIEW;
 
         if ($level && $cid) {
             $categoryModel = new CategoryModel();
