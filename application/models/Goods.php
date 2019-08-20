@@ -62,11 +62,11 @@ class GoodsModel extends AbstractModel {
         return $goods_list;
     }
 
-    public function fetchAll($level, $cid, $query, $pn, $ps, $uid) {
+    public function fetchAll($level, $cid, $query, $pn, $ps, $uid, $in_review) {
         $pn = max($pn, 1);
         $offset = ($pn - 1) * $ps;
 
-        $where = [];
+        $where['status'] = 0;
         if ($level && $cid) {
             switch($level) {
             case 1:
@@ -82,17 +82,20 @@ class GoodsModel extends AbstractModel {
             }
         }
 
+        if ($in_review) {
+            $where['platform'] = \Constants::GOODS_PLATFORM_JDK;
+        }
+
         if ($query) {
             $sql = 'select * from '.self::TABLE." where match(title) against(? IN NATURAL LANGUAGE MODE)";
             if (!empty($where)) {
-                $whereStr = key($where).'='.current($where);
+                $whereStr = $this->buildWhere($where);
                 $sql .= ' and '.$whereStr;
             }
-            $sql .= " and status = 0 limit $offset, $ps";
+            $sql .= " limit $offset, $ps";
             $goods_list = $this->db->query($sql, [$query]);
         } else {
             $goods_list = $this->db->table(self::TABLE);
-            $where['status'] = 0;
             $goods_list = $goods_list->where($where);
             $goods_list = $goods_list->orderBy('score', 'DESC')->limit($offset, $ps)->getAll();
         }
@@ -186,16 +189,21 @@ class GoodsModel extends AbstractModel {
 
         sort($goods['lowest_type']);
 
+        $goods['click_toast'] = "";
         if ($goods['platform'] == Constants::GOODS_PLATFORM_TBK) {
             if ($goods['click_url_tpwd']) {
                 $goods['click_url_tpwd'] = "{$goods['title']}\n💰原价{$goods['reserve_price']}，💰优惠后{$goods['lowest_price']}\n{$goods['click_url_tpwd']} 打开淘宝立即抢购~";
+                $goods['click_toast'] = ['已复制淘口令', '打开淘宝APP立即抢购吧'];
             }
             if ($goods['coupon_click_url_tpwd']) {
                 $goods['coupon_click_url_tpwd'] = "{$goods['title']}\n💰原价{$goods['reserve_price']}，💰优惠后{$goods['lowest_price']}\n{$goods['coupon_click_url_tpwd']} 打开淘宝立即抢购~";
+                $goods['click_toast'] = ['已复制淘口令', '打开淘宝APP立即抢券吧'];
             }
+            $goods['platname'] = '淘宝';
         } else {
             $goods['coupon_click_url_tpwd'] = $goods['coupon_click_url'];
             $goods['click_url_tpwd'] = $goods['click_url'];
+            $goods['platname'] = '京东';
         }
 
         return $goods;
@@ -368,6 +376,14 @@ class GoodsModel extends AbstractModel {
             return $promo['starttime'] < $time && $time < $promo['endtime'];
         }
         return true;
+    }
+
+    private function buildWhere($where) {
+        foreach($where as $key => $val) {
+            $wheres[] = $key . '=' . $val;
+        }
+        $str = implode(' and ', $wheres);
+        return $str;
     }
 
 }
