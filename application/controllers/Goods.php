@@ -1,12 +1,16 @@
 <?php
 class GoodsController extends \Explorer\ControllerAbstract {
 
+    const APIV_IN_REVIEW = '0.3';
+
     public function listAction() {
         $level = (int)$this->getRequest()->getQuery('level', 0);
         $cid = (int)$this->getRequest()->getQuery('cid', 0);
         $query = mb_substr($this->getRequest()->getQuery('query', ''), 0, 100);
         $pn = (int)$this->getRequest()->getQuery('pn', 1);
         $ps = 10;
+        $apiv = $this->getRequest()->getQuery('apiv');
+        $in_review = $apiv == self::APIV_IN_REVIEW;
 
         if ($level && $cid) {
             $categoryModel = new CategoryModel();
@@ -17,12 +21,12 @@ class GoodsController extends \Explorer\ControllerAbstract {
 
         $goodsModel = new GoodsModel();
         if (!$level && !$cid && !$query) {
-            $goods_list_cats = $goodsModel->fetchAll(1, 100, $query, $pn, $ps / 2, $this->userId);
-            $goods_list_dogs = $goodsModel->fetchAll(1, 200, $query, $pn, $ps / 2, $this->userId);
+            $goods_list_cats = $goodsModel->fetchAll(1, 100, $query, $pn, $ps / 2, $this->userId, $in_review);
+            $goods_list_dogs = $goodsModel->fetchAll(1, 200, $query, $pn, $ps / 2, $this->userId, $in_review);
             $goods_list = array_merge($goods_list_cats, $goods_list_dogs);
             shuffle($goods_list);
         } else {
-            $goods_list = $goodsModel->fetchAll($level, $cid, $query, $pn, $ps, $this->userId);
+            $goods_list = $goodsModel->fetchAll($level, $cid, $query, $pn, $ps, $this->userId, $in_review);
         }
 
         if ($pn == 1 && $query) {
