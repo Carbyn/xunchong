@@ -8,6 +8,7 @@ class ImportCategory {
     public static $categories = [
         ['cid' => 100, 'pcid' => 0, 'name' => '猫猫', 'icon' => ''],
         ['cid' => 200, 'pcid' => 0, 'name' => '狗狗', 'icon' => ''],
+        ['cid' => 300, 'pcid' => 0, 'name' => '精选', 'icon' => ''],
 
         ['cid' => 10000, 'pcid' => 100, 'name' => '干粮系列', 'icon' => ''],
         ['cid' => 10001, 'pcid' => 100, 'name' => '零食系列', 'icon' => ''],
@@ -24,6 +25,8 @@ class ImportCategory {
         ['cid' => 20004, 'pcid' => 200, 'name' => '狗狗美容', 'icon' => ''],
         ['cid' => 20005, 'pcid' => 200, 'name' => '狗狗玩具', 'icon' => ''],
         ['cid' => 20006, 'pcid' => 200, 'name' => '出行装备', 'icon' => ''],
+
+        ['cid' => 30000, 'pcid' => 300, 'name' => '精选', 'icon' => ''],
 
         ['cid' => 1000000, 'pcid' => 10000, 'name' => '进口粮', 'icon' => '/static/category/mao/jinkouliang.jpg'],
         ['cid' => 1000001, 'pcid' => 10000, 'name' => '国产粮', 'icon' => '/static/category/mao/guochanliang.jpg'],
@@ -91,6 +94,8 @@ class ImportCategory {
         ['cid' => 2000601, 'pcid' => 20006, 'name' => '牵引系列', 'icon' => '/static/category/gou/qianyinxilie.jpg'],
         ['cid' => 2000602, 'pcid' => 20006, 'name' => '胸背套装', 'icon' => '/static/category/gou/xiongbeitaozhuang.jpg'],
         ['cid' => 2000603, 'pcid' => 20006, 'name' => '项圈狗牌', 'icon' => '/static/category/gou/xiangquangoupai.jpg'],
+
+        ['cid' => 3000000, 'pcid' => 30000, 'name' => '每日精选', 'icon' => ''],
     ];
 
     public static function run() {

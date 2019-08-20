@@ -9,13 +9,13 @@ class CrawlTbk {
         $pn = 1;
         while(true) {
             $favList = \Explorer\Tbk::getFavoritesList($pn++, 1);
-            // if (!$favList || !isset($favList['results'])) {
             if (!$favList || !property_exists($favList, 'results') || !property_exists($favList->results, 'tbk_favorites')) {
                 echo "getFavoritesList failed\n";
                 break;
             }
             foreach($favList->results->tbk_favorites as $fav) {
                 echo "{$fav->favorites_title} begin\n";
+
                 $categories = self::parseCategory($fav->favorites_title);
                 if (!$categories) {
                     continue;
@@ -114,6 +114,9 @@ class CrawlTbk {
 
     private static function parseCategory($title) {
         $category = explode('-', $title);
+        if (count($category) == 2 && $category[0] == '每日精选') {
+            $category = ['精选', '精选', '每日精选'];
+        }
         if (count($category) != 3) {
             echo "{$title} format unsupport\n";
             return false;
