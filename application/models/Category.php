@@ -37,12 +37,14 @@ class CategoryModel extends AbstractModel {
                 }
             }
         }
+        $cat2brandModel = new Cat2brandModel();
         foreach($data as &$c) {
             foreach($c['children'] as &$cc) {
                 foreach($categories as $ccc) {
                     $ccc = (array)$ccc;
                     if ($ccc['pcid'] == $cc['cid']) {
                         $cc['children'][] = $this->format($ccc);
+                        $cc['brands'] = $cat2brandModel->fetchBrandsByCid($cc['cid']);
                     }
                 }
             }
