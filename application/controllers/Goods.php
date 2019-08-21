@@ -1,7 +1,7 @@
 <?php
 class GoodsController extends \Explorer\ControllerAbstract {
 
-    const VER_IN_REVIEW = '0.2';
+    const VER_IN_REVIEW = '0.3';
 
     public function listAction() {
         $level = (int)$this->getRequest()->getQuery('level', 0);
