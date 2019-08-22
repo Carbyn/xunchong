@@ -1,46 +1,31 @@
 <?php
-/**
- * @name IndexController
- * @author explorer
- * @desc 默认控制器
- * @see http://www.php.net/manual/en/class.yaf-controller-abstract.php
- */
 class IndexController extends \Explorer\ControllerAbstract{
 
-	/**
-     * 默认动作
-     * Yaf支持直接把Yaf\Request\Abstract::getParam()得到的同名参数作为Action的形参
-     * 对于如下的例子, 当访问http://yourhost/weather/index/index/index/name/explorer 的时候, 你就会发现不同
-     */
-	public function indexAction($name = "Stranger") {
-        $skuid = $this->getRequest()->getQuery('skuid');
-        $cid = $this->getRequest()->getQuery('cid');
-        $sid = $this->getRequest()->getQuery('sid');
-        echo json_encode(\Explorer\JD::fetchPromo($skuid, $cid));
-        exit;
-        echo json_encode(\Explorer\Tmall::fetchPromo($skuid, $sid));
-        exit;
-        $resp = \Explorer\Tbk::getFavoritesList();
-        echo json_encode($resp);exit;
-
-        $client = new Predis\Client();
-        //$client->set('foo', 'bar');
-        $value = $client->get('foo');
-        //$client->expire('foo', 3);
-        echo $value; exit;
-        return $this->outputSuccess();
-		//1. fetch query
-		$get = $this->getRequest()->getQuery("get", "default value");
-
-		//2. fetch model
-		$model = new SampleModel();
-
-		//3. assign
-		$this->getView()->assign("content", $model->selectSample());
-		$this->getView()->assign("name", $name);
-		echo $this->getView()->render('index/index.phtml');
-
-		//4. render by Yaf, 如果这里返回FALSE, Yaf将不会调用自动视图引擎Render模板
-        return TRUE;
+	public function indexAction() {
+        $floors = [
+            'tabs' => [
+                [
+                    'name' => '超值精选',
+                    'params' => '',
+                ],
+                [
+                    'name' => '主子心爱',
+                    'params' => 'level=1&cid=100',
+                ],
+                [
+                    'name' => '狗狗必备',
+                    'params' => 'level=1&cid=200',
+                ],
+            ],
+            'banners' => [
+                [
+                    'name' => '每日精选',
+                    'params' => 'level=1&cid=300',
+                    'img' => 'https://img2.epetbar.com/2019-03/20/20/ecd80b8eab5e23fda542a77a1f9740aa.jpg?x-oss-process=style/water',
+                ],
+            ]
+        ];
+        $this->outputSuccess(compact('floors'));
 	}
+
 }
