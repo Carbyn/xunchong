@@ -62,7 +62,7 @@ class GoodsModel extends AbstractModel {
         return $goods_list;
     }
 
-    public function fetchAll($level, $cid, $query, $pn, $ps, $uid, $in_review) {
+    public function fetchAll($level, $cid, $bid, $query, $pn, $ps, $uid, $in_review) {
         $pn = max($pn, 1);
         $offset = ($pn - 1) * $ps;
 
@@ -80,6 +80,9 @@ class GoodsModel extends AbstractModel {
                 break;
             default:
             }
+        }
+        if ($bid) {
+            $where['brand_id'] = $bid;
         }
 
         if ($in_review) {

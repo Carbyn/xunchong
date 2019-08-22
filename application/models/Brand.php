@@ -18,6 +18,20 @@ class BrandModel extends AbstractModel {
         if (empty($brands)) {
             return [];
         }
+        foreach($brands as &$b) {
+            $b = (array)$b;
+        }
+        return $brands;
+    }
+
+    public function fetchAll() {
+        $brands = $this->db->table(self::TABLE)->getAll();
+        if (empty($brands)) {
+            return [];
+        }
+        foreach($brands as &$b) {
+            $b = (array)$b;
+        }
         return (array)$brands;
     }
 

@@ -6,27 +6,21 @@ class GoodsController extends \Explorer\ControllerAbstract {
     public function listAction() {
         $level = (int)$this->getRequest()->getQuery('level', 0);
         $cid = (int)$this->getRequest()->getQuery('cid', 0);
+        $bid = (int)$this->getRequest()->getQuery('bid', 0);
         $query = mb_substr($this->getRequest()->getQuery('query', ''), 0, 100);
         $pn = (int)$this->getRequest()->getQuery('pn', 1);
         $ps = 10;
         $ver = $this->getRequest()->getQuery('ver');
         $in_review = $ver == self::VER_IN_REVIEW;
 
-        if ($level && $cid) {
-            $categoryModel = new CategoryModel();
-            if (!$categoryModel->fetch($cid)) {
-                return $this->outputError(Constants::ERR_GOODS_PARAM_INVALID, '类目不存在');
-            }
-        }
-
         $goodsModel = new GoodsModel();
         if (!$level && !$cid && !$query) {
-            $goods_list_cats = $goodsModel->fetchAll(1, 100, $query, $pn, $ps / 2, $this->userId, $in_review);
-            $goods_list_dogs = $goodsModel->fetchAll(1, 200, $query, $pn, $ps / 2, $this->userId, $in_review);
+            $goods_list_cats = $goodsModel->fetchAll(1, 100, $bid, $query, $pn, $ps / 2, $this->userId, $in_review);
+            $goods_list_dogs = $goodsModel->fetchAll(1, 200, $bid, $query, $pn, $ps / 2, $this->userId, $in_review);
             $goods_list = array_merge($goods_list_cats, $goods_list_dogs);
             shuffle($goods_list);
         } else {
-            $goods_list = $goodsModel->fetchAll($level, $cid, $query, $pn, $ps, $this->userId, $in_review);
+            $goods_list = $goodsModel->fetchAll($level, $cid, $bid, $query, $pn, $ps, $this->userId, $in_review);
         }
 
         if ($pn == 1 && $query) {
