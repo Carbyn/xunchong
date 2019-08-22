@@ -7,6 +7,8 @@ class CrawlTbk {
 
     public static function run() {
         $pn = 1;
+        $brandModel = new BrandModel();
+        $brands = $brandModel->fetchAll();
         while(true) {
             $favList = \Explorer\Tbk::getFavoritesList($pn++, 1);
             if (!$favList || !property_exists($favList, 'results') || !property_exists($favList->results, 'tbk_favorites')) {
@@ -48,6 +50,7 @@ class CrawlTbk {
                             echo "item click_url or pict_url empty: {$item['num_iid']}\n";
                             continue;
                         }
+                        $item['brand_id'] = self::matchBrand($brands, $item['title']);
                         $item['categories'] = $categories;
                         self::saveGoods($item);
                         echo "{$item['num_iid']} saved\n";
@@ -71,6 +74,7 @@ class CrawlTbk {
             'cat_id' => $item['categories'][0]->cid,
             's_cat_id' => $item['categories'][1]->cid,
             'leaf_cat_id' => $item['categories'][2]->cid,
+            'brand_id' => (int)$item['brand_id'],
             'reserve_price' => (float)$item['reserve_price'],
             'final_price' => (float)$item['zk_final_price_wap'],
             'volume' => (int)$item['volume'],
@@ -138,6 +142,15 @@ class CrawlTbk {
             return false;
         }
         return [$c, $cc, $ccc];
+    }
+
+    private static function matchBrand($brands, $title) {
+        foreach($brands as $b) {
+            if (mb_strpos($title, $b['name']) !== false) {
+                return $b['id'];
+            }
+        }
+        return false;
     }
 
     private static function parseCoupon($item) {

@@ -11,6 +11,8 @@ $app->execute(['CrawlJdkWorker', 'run'], $argv[1], $argv[2]);
 class CrawlJdkWorker {
 
     public static function run($path, $filename) {
+        $brandModel = new BrandModel();
+        $brands = $brandModel->fetchAll();
         $categories = self::parseCategory($filename);
         if (!$categories) {
             return;
@@ -27,11 +29,11 @@ class CrawlJdkWorker {
             if ($i++ == 0 || trim($row) == '') {
                 continue;
             }
-            self::processRow($categories, $row);
+            self::processRow($categories, $brands, $row);
         }
     }
 
-    private static function processRow($categories, $row) {
+    private static function processRow($categories, $brands, $row) {
         $basic_info = preg_split('#\s,#', $row);
         $item = [
             'title' => trim($basic_info[0]),
@@ -65,6 +67,7 @@ class CrawlJdkWorker {
         }
         $item = array_merge($item, $full_info);
         $item['categories'] = $categories;
+        $item['brand_id'] = self::matchBrand($brands, $item['goodsName']);
         self::saveGoods($item);
         echo "$skuid save\n";
     }
@@ -81,6 +84,7 @@ class CrawlJdkWorker {
             'cat_id' => $item['categories'][0]->cid,
             's_cat_id' => $item['categories'][1]->cid,
             'leaf_cat_id' => $item['categories'][2]->cid,
+            'brand_id' => (int)$item['brand_id'],
             'reserve_price' => 0,
             'final_price' => (float)$item['wlUnitPrice'],
             'volume' => (int)$item['inOrderCount'],
@@ -140,6 +144,15 @@ class CrawlJdkWorker {
             return false;
         }
         return [$c, $cc, $ccc];
+    }
+
+    private static function matchBrand($brands, $title) {
+        foreach($brands as $b) {
+            if (mb_strpos($title, $b['name']) !== false) {
+                return $b['id'];
+            }
+        }
+        return false;
     }
 
 }
