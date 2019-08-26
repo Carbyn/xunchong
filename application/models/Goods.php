@@ -62,7 +62,7 @@ class GoodsModel extends AbstractModel {
         return $goods_list;
     }
 
-    public function fetchAll($level, $cid, $bid, $query, $pn, $ps, $uid, $in_review) {
+    public function fetchAll($level, $cid, $bid, $query, $pn, $ps, $uid, $in_review, $onlyCoupon) {
         $pn = max($pn, 1);
         $offset = ($pn - 1) * $ps;
 
@@ -89,17 +89,29 @@ class GoodsModel extends AbstractModel {
             $where['platform'] = \Constants::GOODS_PLATFORM_JDK;
         }
 
+        $notWhere = [];
+        if ($onlyCoupon) {
+            $notWhere['coupon_click_url'] = '';
+        }
+
         if ($query) {
             $sql = 'select * from '.self::TABLE." where match(title) against(? IN NATURAL LANGUAGE MODE)";
             if (!empty($where)) {
                 $whereStr = $this->buildWhere($where);
                 $sql .= ' and '.$whereStr;
             }
+            if (!empty($notWhere)) {
+                $notWhereStr = $this->buildWhere($notWhere, true);
+                $sql .= ' and '.$notWhereStr;
+            }
             $sql .= " limit $offset, $ps";
             $goods_list = $this->db->query($sql, [$query]);
         } else {
             $goods_list = $this->db->table(self::TABLE);
             $goods_list = $goods_list->where($where);
+            if (!empty($notWhere)) {
+                $goods_list = $goods_list->notWhere($notWhere);
+            }
             $goods_list = $goods_list->orderBy('score', 'DESC')->limit($offset, $ps)->getAll();
         }
 
@@ -381,9 +393,13 @@ class GoodsModel extends AbstractModel {
         return true;
     }
 
-    private function buildWhere($where) {
+    private function buildWhere($where, $not = false) {
         foreach($where as $key => $val) {
-            $wheres[] = $key . '=' . $val;
+            if ($not) {
+                $wheres[] = sprintf("not %s = '%s'", $key, $val);
+            } else {
+                $wheres[] = sprintf("%s = '%s'", $key, $val);
+            }
         }
         $str = implode(' and ', $wheres);
         return $str;

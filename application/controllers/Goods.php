@@ -9,18 +9,19 @@ class GoodsController extends \Explorer\ControllerAbstract {
         $bid = (int)$this->getRequest()->getQuery('bid', 0);
         $query = mb_substr($this->getRequest()->getQuery('query', ''), 0, 100);
         $pn = (int)$this->getRequest()->getQuery('pn', 1);
+        $coupon = (int)$this->getRequest()->getQuery('coupon', 0);
         $ps = 10;
         $ver = $this->getRequest()->getQuery('ver');
         $in_review = $ver == self::VER_IN_REVIEW;
 
         $goodsModel = new GoodsModel();
         if (!$level && !$cid && !$query) {
-            $goods_list_cats = $goodsModel->fetchAll(1, 100, $bid, $query, $pn, $ps / 2, $this->userId, $in_review);
-            $goods_list_dogs = $goodsModel->fetchAll(1, 200, $bid, $query, $pn, $ps / 2, $this->userId, $in_review);
+            $goods_list_cats = $goodsModel->fetchAll(1, 100, $bid, $query, $pn, $ps / 2, $this->userId, $in_review, $coupon);
+            $goods_list_dogs = $goodsModel->fetchAll(1, 200, $bid, $query, $pn, $ps / 2, $this->userId, $in_review, $coupon);
             $goods_list = array_merge($goods_list_cats, $goods_list_dogs);
             shuffle($goods_list);
         } else {
-            $goods_list = $goodsModel->fetchAll($level, $cid, $bid, $query, $pn, $ps, $this->userId, $in_review);
+            $goods_list = $goodsModel->fetchAll($level, $cid, $bid, $query, $pn, $ps, $this->userId, $in_review, $coupon);
         }
 
         if ($pn == 1 && $query) {
