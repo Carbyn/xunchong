@@ -15,4 +15,10 @@ class JDKApis {
         $req->setSkuIds($skuid);
         return JDK::getTopClient()->execute($req);
     }
+
+    public static function getPkgList() {
+        $req = new \GetPkgListRequest();
+        return JDK::getTopClient()->execute($req);
+    }
+
 }
