@@ -5,10 +5,6 @@
  */
 class GetPkgListRequest {
 
-    private $mode;
-    private $reqParas = array();
-	private $apiParas = array();
-
     public function getApiMethodName() {
         return 'jd.kepler.xuanpin.getpkglist';
     }
@@ -17,10 +13,4 @@ class GetPkgListRequest {
         return ['mode' => 0];
     }
 
-	public function putOtherTextParam($key, $value) {
-		$this->$key = $value;
-		$this->apiParas[$key] = $value;
-    }
-
 }
-

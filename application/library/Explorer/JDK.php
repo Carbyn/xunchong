@@ -13,6 +13,7 @@ class JDK {
             self::$tc->format = 'json';
             self::$tc->connectTimeout = 1;
             self::$tc->readTimeout = 2;
+            self::$tc->accessToken = Kpl::getToken();
         }
         return self::$tc;
     }
