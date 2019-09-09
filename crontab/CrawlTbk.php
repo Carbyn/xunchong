@@ -146,7 +146,7 @@ class CrawlTbk {
 
     private static function matchBrand($brands, $title) {
         foreach($brands as $b) {
-            if (mb_strpos($title, $b['name']) !== false) {
+            if (mb_strpos(strtolower($title), strtolower($b['name'])) !== false) {
                 return $b['id'];
             }
         }
