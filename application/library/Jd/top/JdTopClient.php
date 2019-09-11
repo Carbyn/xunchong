@@ -5,6 +5,8 @@ class JdTopClient
 
 	public $secretKey;
 
+    public $accessToken;
+
 	public $gatewayUrl = "https://router.jd.com/api";
 
 	public $format = "json";
@@ -218,7 +220,7 @@ class JdTopClient
 		$logger->log($logData);
 	}
 
-	public function execute($request, $bestUrl = null)
+	public function execute($request, $needAccessToken = false, $apiVersion = '1.0')
 	{
 		$result =  new ResultSet();
 		// if($this->checkRequest) {
@@ -237,8 +239,11 @@ class JdTopClient
 		$sysParams["app_key"] 	= $this->appkey;
 		$sysParams["timestamp"] = date("Y-m-d H:i:s");
 		$sysParams["format"] 	= $this->format;
-		$sysParams["v"] 	  	= $this->apiVersion;
+		$sysParams["v"] 	  	= $apiVersion;
 		$sysParams["sign_method"] = $this->signMethod;
+        if ($needAccessToken) {
+            $sysParams['access_token'] = $this->accessToken;
+        }
         /*
 		if (null != $session)
 		{
@@ -273,7 +278,7 @@ class JdTopClient
         // https://router.jd.com/apiv=1.0&method=jd.union.open.category.goods.get&access_token=&app_key=&sign_method=&format=json&timestamp=2019-08-08 21:01:04&sign=B62BF4C583EE4F3DFAE7B6E72130EF7D&param_json={"req":{"parentId":0,"grade":0}}
 		$requestUrl .= "param_json=".$apiParams['param_json']; // 不能urlencode，tmd会出错。。
 		// $requestUrl = substr($requestUrl, 0, -1);
-        // echo $requestUrl."\n";
+        echo $requestUrl."\n";
 
 		//发起HTTP请求
 		try

@@ -7,6 +7,7 @@ CREATE TABLE `goods` (
     `cat_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'cat id',
     `s_cat_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'secondnary cat id',
     `leaf_cat_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'leaf cat id',
+    `brand_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'brand id',
     `reserve_price` decimal(20, 2) NOT NULL DEFAULT 0 COMMENT 'reserve price, ￥1.23',
     `final_price` decimal(20, 2) NOT NULL DEFAULT 0 COMMENT 'final price, ￥1.23',
     `volume` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'volume',
